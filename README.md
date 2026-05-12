@@ -1,178 +1,177 @@
-# 💇 Salon Management ERP System (V2 Advance)
+# 💇 Salon Management System (ERP)
 
-<div align="center">
-  <img src="https://img.shields.io/badge/Python-3.9+-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white" alt="Streamlit">
-  <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
-  <img src="https://img.shields.io/badge/Licence-MIT-green?style=for-the-badge" alt="License">
-</div>
+![Salon Management ERP System](banner.png)
 
----
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://salon-management-system-fnmykcwms3nt2mwga9lvbk.streamlit.app/)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![SQLite](https://img.shields.io/badge/database-SQLite-003B57.svg)](https://www.sqlite.org/index.html)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-![Salon Management Banner](salon_erp_banner_1778511582677.png)
-
-## 🏢 Overview
-**Salon Management ERP V2 Advance** is a premium, all-in-one business management solution tailored for high-end salons, spas, and beauty centers. Developed using **Streamlit**, this enterprise-grade application offers a seamless, real-time interface to manage every aspect of salon operations—from staff attendance to complex billing and customer retention analytics.
-
-This version is engineered for scalability, featuring a robust SQLite backend, dynamic data visualization, and an intuitive user experience designed to minimize operational friction.
-
-## 🌟 Core Pillars
-
-> [!TIP]
-> **Operational Excellence**: Automate daily tasks so you can focus on providing world-class beauty services.
-
-| Feature | Description | Benefit |
-| :--- | :--- | :--- |
-| **Smart Dashboard** | Real-time KPI tracking & Revenue analytics. | Data-driven decision making. |
-| **Unified Billing** | Instant invoice generation & service tracking. | Faster checkouts & accurate accounting. |
-| **Client CRM** | Comprehensive customer history & preferences. | Enhanced loyalty & personalized service. |
-| **Staff HQ** | Attendance, performance & role management. | Optimized workforce productivity. |
+A professional, industry-standard **Salon Management System** built with Python and Streamlit. This ERP-level application streamlines salon operations, from employee attendance and customer records to appointment scheduling and automated PDF billing.
 
 ---
 
-## 🛠️ System Architecture
+## 🚀 Live Demo
+Experience the application live: [Salon Management System Demo](https://salon-management-system-fnmykcwms3nt2mwga9lvbk.streamlit.app/)
 
-```mermaid
-graph TD
-    User((Salon Admin)) --> Auth[Authentication Layer]
-    Auth --> Dashboard[Core Dashboard]
-    
-    subgraph Modules
-        Dashboard --> Employees[Employee Management]
-        Dashboard --> Customers[Customer CRM]
-        Dashboard --> Appts[Appointment Engine]
-        Dashboard --> Billing[Smart Invoicing]
-    end
-    
-    subgraph Data
-        Employees --> DB[(SQLite Database)]
-        Customers --> DB
-        Appts --> DB
-        Billing --> DB
-    end
-    
-    DB --> Analytics[Real-time Business Insights]
-```
+> **Credentials:**
+> - **Username:** `admin`
+> - **Password:** `admin123`
 
 ---
 
-## 🚀 Key Modules
+## 🌟 Key Features
 
-### 📊 Intelligence Dashboard
-*   **Revenue Metrics**: Tracks total earnings (₹) with real-time updates.
-*   **Service Analytics**: Bar charts visualizing the most popular services.
-*   **Growth Insights**: Automated metrics for customer and appointment volume.
+### 📊 Advanced Dashboard
+- **Real-time Analytics**: Track total employees, customers, appointments, and revenue.
+- **Visual Insights**: Interactive bar charts showing service popularity.
+- **Smart Metrics**: Instant view of the most popular services and financial health.
 
-### 📅 Advanced Appointment Engine
-*   Seamless booking flow to eliminate schedule overlaps.
-*   Status tracking for pending, completed, or cancelled appointments.
+### 👩‍💼 Employee Management
+- **Full CRUD Operations**: Add, view, search, update, and delete staff members.
+- **Role Tracking**: Manage stylists, makeup artists, therapists, and receptionists.
+- **Salary Management**: Keep track of staff compensation.
 
-### 🧾 Smart Billing & Financials
-*   Automated price calculation based on service type.
-*   Instant digital invoice generation.
-*   Historical billing records for audit and tax purposes.
+### 🧾 Smart Billing & Invoicing
+- **Automated PDF Generation**: Generate professional invoices instantly.
+- **Downloadable Reports**: Export billing history to CSV for bookkeeping.
+- **Service Selection**: Pre-defined service categories with custom pricing.
 
-### 👩‍💼 Human Resource Management
-*   Full staff profiling and contact management.
-*   Integrated attendance tracking system (Check-in/Check-out).
+### 📅 Appointment & Attendance
+- **Scheduling**: Book appointments for customers with specific services and stylists.
+- **Attendance Tracker**: Mark and monitor staff daily attendance (Present/Absent/Half-day).
+- **History Tracking**: View comprehensive visit and attendance history.
 
----
-
-## 💻 Tech Stack
-- **Frontend/UX**: [Streamlit](https://streamlit.io/) (High-performance web framework)
-- **Database**: SQLite3 (ACID compliant, zero-config relational DB)
-- **Data Analysis**: Pandas (Advanced data manipulation)
-- **Visuals**: Matplotlib / Streamlit Charts
-- **UI/UX**: Custom CSS Injection & Google Fonts
+### 🔍 Global Search
+- **Unified Search**: Quickly find records across the entire database using a centralized search module.
 
 ---
 
-## 📦 Installation & Deployment
+## 📸 Screenshots
 
-### Prerequisites
-- Python 3.9 or higher
-- Pip (Python Package Manager)
+| Login Interface | Main Dashboard |
+| :---: | :---: |
+| ![Login Screen](https://via.placeholder.com/400x250?text=Login+Interface) | ![Dashboard](https://via.placeholder.com/400x250?text=Analytics+Dashboard) |
 
-### Step-by-Step Setup
-
-1.  **Clone the Repository**
-    ```bash
-    git clone https://github.com/your-username/Salon-Management-V2.git
-    cd Salon-Management-V2
-    ```
-
-2.  **Install Dependencies**
-    ```bash
-    pip install streamlit pandas
-    ```
-
-3.  **Run the Application**
-    ```bash
-    streamlit run app.py
-    ```
-
-> [!IMPORTANT]
-> The system will automatically initialize `salon.db` on the first run. No manual database setup is required.
-
-### Default Credentials
-| Role | Username | Password |
-| :--- | :--- | :--- |
-| **Super Admin** | `admin` | `admin123` |
+| Employee Management | Appointment Scheduler |
+| :---: | :---: |
+| ![Employee Management](https://via.placeholder.com/400x250?text=Employee+Management) | ![Appointments](https://via.placeholder.com/400x250?text=Appointment+Scheduler) |
 
 ---
 
-## 📂 Project Structure
+## 🛠️ Technology Stack
+
+- **Frontend**: [Streamlit](https://streamlit.io/) (for a modern, interactive UI)
+- **Backend**: Python 3
+- **Database**: SQLite3 (Lightweight and persistent)
+- **PDF Generation**: [ReportLab](https://www.reportlab.com/)
+- **Data Manipulation**: Pandas
+- **Styling**: Custom CSS for premium aesthetics
+
+---
+
+## 📁 Project Structure
 
 ```text
-├── assets/               # Visual assets & banners
-├── app.py                # Main entry point & routing
-├── appointment.py        # Appointment scheduling logic
-├── attendance.py         # Employee attendance tracking
-├── auth.py               # Session & Authentication handling
-├── billing.py            # Billing & Revenue management
-├── customer.py           # Customer CRM module
-├── database.py           # SQLite schema & connections
-├── employee.py           # HR & Staff management
-├── invoice.py            # PDF/Text Invoice generation logic
-├── salon.db              # Local SQLite Database
-├── search.py             # Global cross-module search
-├── style.py              # Custom CSS & UI components
-└── utils.py              # Helper functions
+Salon-Management-System/
+├── app.py              # Main entry point & routing
+├── database.py         # DB schema & connection logic
+├── auth.py             # User authentication system
+├── employee.py         # Employee management module
+├── customer.py         # Customer records module
+├── appointment.py      # Scheduling system
+├── attendance.py       # Staff attendance tracker
+├── billing.py          # Invoice generation & billing
+├── invoice.py          # PDF generation engine
+├── search.py           # Global search functionality
+├── style.py            # Custom CSS styling
+├── requirements.txt    # Project dependencies
+└── banner.png          # README header image
 ```
 
 ---
 
-## 🔍 Feature Deep-Dive
+## ⚙️ Installation & Setup
 
-### 🛡️ Secure Authentication
-The system uses a state-persistent login mechanism. Sessions are managed via Streamlit's `session_state`, ensuring that sensitive business data is only accessible to authorized personnel.
+### Prerequisites
+- Python 3.8 or higher installed on your system.
 
-### 🔎 Global Search Engine
-Located in the sidebar, the Global Search allows admins to find records across the entire database instantly. Whether it's a customer's phone number or an employee's ID, the system fetches results in milliseconds.
+### Steps
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/ItsMeTinku/Salon-Management-System.git
+   cd Salon-Management-System
+   ```
 
-### 📄 Dynamic Invoicing
-When a bill is generated, the system creates a formatted view (and logic for export) that includes service details, taxes, and total amounts, ready for the customer.
+2. **Create a Virtual Environment (Optional but Recommended)**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
-### 📉 Persistence Layer
-Unlike basic Streamlit apps, this ERP uses a relational database (`sqlite3`). All data—from employee salaries to historical billing—is persisted locally, allowing the business to track growth over years.
+3. **Install Dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Run the Application**
+   ```bash
+   streamlit run app.py
+   ```
 
 ---
 
-## 🤝 Contribution & Support
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+## 📖 Usage Instructions
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. **Login**: Use the default credentials (`admin` / `admin123`) to access the dashboard.
+2. **Setup Staff**: Navigate to the **Employees** tab to add your salon staff.
+3. **Manage Customers**: Record customer details in the **Customers** section.
+4. **Book Appointments**: Use the **Appointments** tab to schedule visits.
+5. **Generate Bills**: After a service, go to **Billing** to generate and download a PDF invoice.
+6. **Track Attendance**: Mark staff attendance daily for payroll accuracy.
+
+---
+
+## 🌐 Deployment
+
+This project is optimized for deployment on **Streamlit Cloud**:
+1. Connect your GitHub repository to Streamlit Cloud.
+2. Ensure `requirements.txt` is in the root directory.
+3. Set `app.py` as the main entry point.
+4. The SQLite database (`salon.db`) will be automatically initialized on first run.
+
+---
+
+## 🔮 Future Improvements
+
+- [ ] **SMS Integration**: Send appointment reminders via Twilio or similar APIs.
+- [ ] **Role-Based Access**: Multi-level access for Staff vs. Managers.
+- [ ] **Cloud Database**: Migration to PostgreSQL or MongoDB for larger scale.
+- [ ] **Inventory Management**: Track salon products and low-stock alerts.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! If you'd like to improve the system:
+1. Fork the Project.
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the Branch (`git checkout origin feature/AmazingFeature`).
+5. Open a Pull Request.
+
+---
 
 ## 📄 License
-Distributed under the **MIT License**. See `LICENSE` for more information.
+
+Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
-<div align="center">
-  <b>Built with ❤️ for the Beauty Industry</b><br>
-  <i>Simplifying salon management, one click at a time.</i>
-</div>
 
+## 📧 Contact
+
+**Project Creator** - [ItsMeTinku](https://github.com/ItsMeTinku)  
+**Live Project**: [https://salon-management-system...](https://salon-management-system-fnmykcwms3nt2mwga9lvbk.streamlit.app/)
+
+---
+*Created with ❤️ for the Salon Industry.*
