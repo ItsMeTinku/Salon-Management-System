@@ -51,11 +51,11 @@ Experience the application live: [Salon Management System Demo](https://salon-ma
 
 | Login Interface | Main Dashboard |
 | :---: | :---: |
-| ![Login Screen](https://via.placeholder.com/400x250?text=Login+Interface) | ![Dashboard](https://via.placeholder.com/400x250?text=Analytics+Dashboard) |
+| ![Login Screen](screenshots/login.png) | ![Dashboard](screenshots/dashboard.png) |
 
 | Employee Management | Appointment Scheduler |
 | :---: | :---: |
-| ![Employee Management](https://via.placeholder.com/400x250?text=Employee+Management) | ![Appointments](https://via.placeholder.com/400x250?text=Appointment+Scheduler) |
+| ![Employee Management](screenshots/Employee%20Management.png) | ![Appointments](screenshots/Appointments.png) |
 
 ---
 
