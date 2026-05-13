@@ -2,6 +2,7 @@ import streamlit as st
 from database import create_tables, insert_admin, fetch_all, fetch_one
 from auth import init_session, login_page, logout
 
+# Standard modules
 from employee import employee_module
 from customer import customer_module
 from appointment import appointment_module
@@ -9,18 +10,29 @@ from attendance import attendance_module
 from billing import billing_module
 from search import global_search
 
+# ================= PAGE CONFIG =================
+st.set_page_config(
+    page_title="Salon ERP Dashboard",
+    page_icon="💇",
+    layout="wide"
+)
+
 # ================= INIT =================
-# Ensure tables are created on startup in PostgreSQL
-create_tables()
-insert_admin()
+@st.cache_resource
+def startup_checks():
+    """Run table creation only once on startup."""
+    create_tables()
+    insert_admin()
+
+startup_checks()
 init_session()
 
-# ================= LOGIN =================
-if not st.session_state.logged_in:
+# ================= LOGIN GUARD =================
+if not st.session_state.get("logged_in", False):
     login_page()
     st.stop()
 
-# ================= STATE =================
+# ================= STABLE STATE =================
 if "page" not in st.session_state:
     st.session_state.page = "Dashboard"
 
@@ -31,115 +43,94 @@ if "subpage" not in st.session_state:
 def navigate(page, subpage=None):
     st.session_state.page = page
     st.session_state.subpage = subpage
+    # Use st.rerun sparingly to avoid flickers
     st.rerun()
 
 # ================= SIDEBAR =================
-st.sidebar.title("💇 Salon ERP System")
+with st.sidebar:
+    st.title("💇 Salon ERP System")
+    st.write(f"Logged as: **{st.session_state.get('role', 'Staff')}**")
+    
+    menu = st.radio(
+        "Navigation",
+        ["Dashboard", "Employees", "Customers", "Appointments", "Attendance", "Billing", "Search", "Logout"],
+        index=["Dashboard", "Employees", "Customers", "Appointments", "Attendance", "Billing", "Search", "Logout"].index(st.session_state.page),
+        key="main_nav"
+    )
 
-menu = st.sidebar.radio(
-    "Navigation",
-    ["Dashboard", "Employees", "Customers", "Appointments", "Attendance", "Billing", "Search", "Logout"],
-    index=["Dashboard", "Employees", "Customers", "Appointments", "Attendance", "Billing", "Search", "Logout"].index(st.session_state.page)
-)
-
-st.session_state.page = menu
+    if menu != st.session_state.page:
+        st.session_state.page = menu
+        st.rerun()
 
 # ================= LOGOUT =================
 if st.session_state.page == "Logout":
     logout()
 
-# ================= DASHBOARD =================
+# ================= DASHBOARD (CACHED) =================
 def dashboard():
     st.title("📊 Salon ERP Dashboard")
 
+    # Fetch data using cached helpers
     try:
-        # Fetching counts using helper functions
-        emp_data = fetch_all("SELECT id FROM employees")
-        cust_data = fetch_all("SELECT phone FROM customers")
-        app_data = fetch_all("SELECT date FROM appointments")
-        bill_data = fetch_all("SELECT amount FROM billing")
-
-        emp = len(emp_data)
-        cust = len(cust_data)
-        app = len(app_data)
-        bill = len(bill_data)
-
-        # PostgreSQL uses CAST(column AS type) or column::type
+        emp_count = len(fetch_all("SELECT id FROM employees"))
+        cust_count = len(fetch_all("SELECT phone FROM customers"))
+        app_count = len(fetch_all("SELECT date FROM appointments"))
+        
         rev_row = fetch_one("SELECT SUM(CAST(amount AS INTEGER)) FROM billing")
         revenue = rev_row[0] if rev_row and rev_row[0] else 0
 
         # ---------- KPI CARDS ----------
         col1, col2, col3, col4 = st.columns(4)
 
-        if col1.button(f"👩‍💼 Employees\n{emp}", use_container_width=True):
-            navigate("Employees", "View")
+        with col1:
+            st.metric("👩‍💼 Employees", emp_count)
+            if st.button("Manage Staff", key="btn_emp"): navigate("Employees", "View")
 
-        if col2.button(f"🧾 Customers\n{cust}", use_container_width=True):
-            navigate("Customers", "View")
+        with col2:
+            st.metric("🧾 Customers", cust_count)
+            if st.button("Manage CRM", key="btn_cust"): navigate("Customers", "View")
 
-        if col3.button(f"📅 Appointments\n{app}", use_container_width=True):
-            navigate("Appointments", "View")
+        with col3:
+            st.metric("📅 Appointments", app_count)
+            if st.button("View Schedule", key="btn_app"): navigate("Appointments", "View")
 
-        if col4.button(f"💰 Revenue\n₹{revenue}", use_container_width=True):
-            navigate("Billing", "View")
+        with col4:
+            st.metric("💰 Total Revenue", f"₹{revenue}")
+            if st.button("Billing History", key="btn_bill"): navigate("Billing", "View")
 
         st.markdown("---")
 
-        # ---------- ANALYTICS ----------
+        # ---------- ANALYTICS (OPTIMIZED) ----------
         st.subheader("📈 Business Analytics")
 
-        data = fetch_all("""
+        chart_data = fetch_all("""
             SELECT service, COUNT(*) 
             FROM billing 
             GROUP BY service
         """)
 
-        if data:
-            st.bar_chart({k: v for k, v in data})
+        if chart_data:
+            st.bar_chart({k: v for k, v in chart_data})
         else:
             st.info("No billing data yet")
 
-        # ---------- INSIGHTS ----------
-        st.markdown("---")
-        st.subheader("🧠 Smart Insights")
-
-        top_service = fetch_one("""
-            SELECT service, COUNT(service)
-            FROM billing
-            GROUP BY service
-            ORDER BY COUNT(service) DESC
-            LIMIT 1
-        """)
-
-        col1, col2 = st.columns(2)
-        col1.metric("💰 Total Revenue", f"₹{revenue}")
-
-        if top_service:
-            col2.metric("🔥 Top Service", top_service[0])
-        else:
-            col2.metric("🔥 Top Service", "N/A")
-
     except Exception as e:
-        st.error(f"Error loading dashboard data: {e}")
+        st.error(f"Error loading dashboard: {e}")
 
 # ================= ROUTING =================
-if st.session_state.page == "Dashboard":
+page = st.session_state.page
+
+if page == "Dashboard":
     dashboard()
-
-elif st.session_state.page == "Employees":
+elif page == "Employees":
     employee_module()
-
-elif st.session_state.page == "Customers":
+elif page == "Customers":
     customer_module()
-
-elif st.session_state.page == "Appointments":
+elif page == "Appointments":
     appointment_module()
-
-elif st.session_state.page == "Attendance":
+elif page == "Attendance":
     attendance_module()
-
-elif st.session_state.page == "Billing":
+elif page == "Billing":
     billing_module()
-
-elif st.session_state.page == "Search":
+elif page == "Search":
     global_search()

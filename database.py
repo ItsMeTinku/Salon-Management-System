@@ -4,11 +4,15 @@ from psycopg2 import extras
 import streamlit as st
 
 # ─────────────────────────────────────────────────────────────────
-# CENTRALIZED DATABASE CONNECTION
+# SINGLETON DATABASE CONNECTION (CRITICAL PERFORMANCE)
 # ─────────────────────────────────────────────────────────────────
 
+@st.cache_resource
 def get_connection():
-    """Establish and return a connection to the Supabase PostgreSQL database."""
+    """
+    Establish a connection once and reuse it across all interactions.
+    This prevents the overhead of reconnecting on every Streamlit rerun.
+    """
     try:
         conn = psycopg2.connect(
             host=st.secrets["DB_HOST"],
@@ -17,17 +21,27 @@ def get_connection():
             password=st.secrets["DB_PASSWORD"],
             port=st.secrets["DB_PORT"]
         )
+        # Ensure connection stays alive
+        conn.autocommit = False 
         return conn
     except Exception as e:
         st.error(f"Failed to connect to the database: {e}")
         return None
 
 # ─────────────────────────────────────────────────────────────────
-# HELPER FUNCTIONS FOR CLEANER CODE
+# CACHE INVALIDATION UTILITY
+# ─────────────────────────────────────────────────────────────────
+
+def clear_db_cache():
+    """Clear cached query data after a mutation (Insert/Update/Delete)."""
+    st.cache_data.clear()
+
+# ─────────────────────────────────────────────────────────────────
+# OPTIMIZED HELPER FUNCTIONS
 # ─────────────────────────────────────────────────────────────────
 
 def execute_query(query, params=None):
-    """Execute a query (INSERT, UPDATE, DELETE) and commit changes."""
+    """Execute mutations and automatically invalidate query caches."""
     conn = get_connection()
     if not conn:
         return False
@@ -35,16 +49,17 @@ def execute_query(query, params=None):
         with conn.cursor() as cur:
             cur.execute(query, params)
             conn.commit()
+            # Success! Clear caches so View pages see the new data
+            clear_db_cache()
             return True
     except Exception as e:
         st.error(f"Database Error: {e}")
         conn.rollback()
         return False
-    finally:
-        conn.close()
 
+@st.cache_data(ttl=600) # Cache for 10 minutes or until invalidated
 def fetch_all(query, params=None):
-    """Fetch all rows for a given query."""
+    """Fetch all rows with st.cache_data for instant UI response."""
     conn = get_connection()
     if not conn:
         return []
@@ -55,11 +70,10 @@ def fetch_all(query, params=None):
     except Exception as e:
         st.error(f"Database Fetch Error: {e}")
         return []
-    finally:
-        conn.close()
 
+@st.cache_data(ttl=600)
 def fetch_one(query, params=None):
-    """Fetch a single row for a given query."""
+    """Fetch a single row with caching."""
     conn = get_connection()
     if not conn:
         return None
@@ -70,8 +84,6 @@ def fetch_one(query, params=None):
     except Exception as e:
         st.error(f"Database Fetch Error: {e}")
         return None
-    finally:
-        conn.close()
 
 # ─────────────────────────────────────────────────────────────────
 # TABLE INITIALIZATION (PostgreSQL Syntax)
