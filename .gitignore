@@ -1,9 +1,19 @@
-# Secrets — never commit real credentials
-.streamlit/secrets.toml
+# Virtual environment
+venv/
 
 # Python cache
 __pycache__/
 *.py[cod]
 
-# Local DB files
+# Environment variables
+.env
+
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# Local databases
 *.db
+
+# OS files (optional but good practice)
+.DS_Store
+Thumbs.db
