@@ -1,10 +1,11 @@
-# 💇 Salon Management System (ERP)
+# 💇 Salon Management System V2 (Advance)
 
 ![Salon Management ERP System](banner.png)
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://salon-management-system-fnmykcwms3nt2mwga9lvbk.streamlit.app/)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![SQLite](https://img.shields.io/badge/database-SQLite-003B57.svg)](https://www.sqlite.org/index.html)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_svg)](https://salon-management-system-fnmykcwms3nt2mwga9lvbk.streamlit.app/)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![PostgreSQL](https://img.shields.io/badge/database-PostgreSQL-336791.svg)](https://www.postgresql.org/)
+[![Supabase](https://img.shields.io/badge/backend-Supabase-3ECF8E.svg)](https://supabase.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A professional, industry-standard **Salon Management System** built with Python and Streamlit. This ERP-level application streamlines salon operations, from employee attendance and customer records to appointment scheduling and automated PDF billing.
@@ -181,7 +182,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ## 📧 Contact
 
 **Project Creator** - [ItsMeTinku](https://github.com/ItsMeTinku)  
-**Live Project**: [https://salon-management-system...](https://salon-management-system-fnmykcwms3nt2mwga9lvbk.streamlit.app/)
+**Live Demo**: [https://salon-management-system-fnmykcwms3nt2mwga9lvbk.streamlit.app/](https://salon-management-system-fnmykcwms3nt2mwga9lvbk.streamlit.app/)
 
 ---
 *Created with ❤️ for the Salon Industry.*
