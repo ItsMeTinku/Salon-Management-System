@@ -1,5 +1,5 @@
 import streamlit as st
-from database import c, conn
+from database import c, conn, PH
 
 def init_session():
     if "logged_in" not in st.session_state:
@@ -13,23 +13,24 @@ def login_page():
 
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
-
-    role = st.selectbox("Login as", ["Admin", "Staff"])
+    role     = st.selectbox("Login as", ["Admin", "Staff"])
 
     if st.button("Login"):
+        try:
+            user = c.execute(
+                f"SELECT * FROM admin WHERE username={PH} AND password={PH}",
+                (username, password)
+            ).fetchone()
 
-        user = c.execute(
-            "SELECT * FROM admin WHERE username=? AND password=?",
-            (username, password)
-        ).fetchone()
-
-        if user:
-            st.session_state.logged_in = True
-            st.session_state.role = role
-            st.success("Login Successful")
-            st.rerun()
-        else:
-            st.error("Invalid Credentials")
+            if user:
+                st.session_state.logged_in = True
+                st.session_state.role = role
+                st.success("Login Successful")
+                st.rerun()
+            else:
+                st.error("Invalid Credentials")
+        except Exception as e:
+            st.error(f"❌ Login error: {e}")
 
 def logout():
     st.session_state.logged_in = False

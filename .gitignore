@@ -1,0 +1,9 @@
+# Secrets — never commit real credentials
+.streamlit/secrets.toml
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local DB files
+*.db
