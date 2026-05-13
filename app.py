@@ -1,6 +1,5 @@
 import streamlit as st
-
-from database import create_tables, insert_admin, c
+from database import create_tables, insert_admin, fetch_all, fetch_one
 from auth import init_session, login_page, logout
 
 from employee import employee_module
@@ -11,6 +10,7 @@ from billing import billing_module
 from search import global_search
 
 # ================= INIT =================
+# Ensure tables are created on startup in PostgreSQL
 create_tables()
 insert_admin()
 init_session()
@@ -50,69 +50,77 @@ if st.session_state.page == "Logout":
 
 # ================= DASHBOARD =================
 def dashboard():
-
     st.title("📊 Salon ERP Dashboard")
 
-    # ---------- DATA ----------
-    emp = len(c.execute("SELECT * FROM employees").fetchall())
-    cust = len(c.execute("SELECT * FROM customers").fetchall())
-    app = len(c.execute("SELECT * FROM appointments").fetchall())
-    bill = len(c.execute("SELECT * FROM billing").fetchall())
+    try:
+        # Fetching counts using helper functions
+        emp_data = fetch_all("SELECT id FROM employees")
+        cust_data = fetch_all("SELECT phone FROM customers")
+        app_data = fetch_all("SELECT date FROM appointments")
+        bill_data = fetch_all("SELECT amount FROM billing")
 
-    revenue = c.execute("SELECT SUM(CAST(amount AS INTEGER)) FROM billing").fetchone()[0]
-    revenue = revenue if revenue else 0
+        emp = len(emp_data)
+        cust = len(cust_data)
+        app = len(app_data)
+        bill = len(bill_data)
 
-    # ---------- KPI CARDS ----------
-    col1, col2, col3, col4 = st.columns(4)
+        # PostgreSQL uses CAST(column AS type) or column::type
+        rev_row = fetch_one("SELECT SUM(CAST(amount AS INTEGER)) FROM billing")
+        revenue = rev_row[0] if rev_row and rev_row[0] else 0
 
-    if col1.button(f"👩‍💼 Employees\n{emp}", use_container_width=True):
-        navigate("Employees", "View")
+        # ---------- KPI CARDS ----------
+        col1, col2, col3, col4 = st.columns(4)
 
-    if col2.button(f"🧾 Customers\n{cust}", use_container_width=True):
-        navigate("Customers", "View")
+        if col1.button(f"👩‍💼 Employees\n{emp}", use_container_width=True):
+            navigate("Employees", "View")
 
-    if col3.button(f"📅 Appointments\n{app}", use_container_width=True):
-        navigate("Appointments", "View")
+        if col2.button(f"🧾 Customers\n{cust}", use_container_width=True):
+            navigate("Customers", "View")
 
-    if col4.button(f"💰 Revenue\n₹{revenue}", use_container_width=True):
-        navigate("Billing", "View")
+        if col3.button(f"📅 Appointments\n{app}", use_container_width=True):
+            navigate("Appointments", "View")
 
-    st.markdown("---")
+        if col4.button(f"💰 Revenue\n₹{revenue}", use_container_width=True):
+            navigate("Billing", "View")
 
-    # ---------- ANALYTICS ----------
-    st.subheader("📈 Business Analytics")
+        st.markdown("---")
 
-    data = c.execute("""
-        SELECT service, COUNT(*) 
-        FROM billing 
-        GROUP BY service
-    """).fetchall()
+        # ---------- ANALYTICS ----------
+        st.subheader("📈 Business Analytics")
 
-    if data:
-        st.bar_chart({k: v for k, v in data})
-    else:
-        st.info("No billing data yet")
+        data = fetch_all("""
+            SELECT service, COUNT(*) 
+            FROM billing 
+            GROUP BY service
+        """)
 
-    # ---------- INSIGHTS ----------
-    st.markdown("---")
-    st.subheader("🧠 Smart Insights")
+        if data:
+            st.bar_chart({k: v for k, v in data})
+        else:
+            st.info("No billing data yet")
 
-    top_service = c.execute("""
-        SELECT service, COUNT(service)
-        FROM billing
-        GROUP BY service
-        ORDER BY COUNT(service) DESC
-        LIMIT 1
-    """).fetchone()
+        # ---------- INSIGHTS ----------
+        st.markdown("---")
+        st.subheader("🧠 Smart Insights")
 
-    col1, col2 = st.columns(2)
+        top_service = fetch_one("""
+            SELECT service, COUNT(service)
+            FROM billing
+            GROUP BY service
+            ORDER BY COUNT(service) DESC
+            LIMIT 1
+        """)
 
-    col1.metric("💰 Total Revenue", f"₹{revenue}")
+        col1, col2 = st.columns(2)
+        col1.metric("💰 Total Revenue", f"₹{revenue}")
 
-    if top_service:
-        col2.metric("🔥 Top Service", top_service[0])
-    else:
-        col2.metric("🔥 Top Service", "N/A")
+        if top_service:
+            col2.metric("🔥 Top Service", top_service[0])
+        else:
+            col2.metric("🔥 Top Service", "N/A")
+
+    except Exception as e:
+        st.error(f"Error loading dashboard data: {e}")
 
 # ================= ROUTING =================
 if st.session_state.page == "Dashboard":

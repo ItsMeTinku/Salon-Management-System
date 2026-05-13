@@ -63,10 +63,20 @@ Experience the application live: [Salon Management System Demo](https://salon-ma
 
 - **Frontend**: [Streamlit](https://streamlit.io/) (for a modern, interactive UI)
 - **Backend**: Python 3
-- **Database**: SQLite3 (Lightweight and persistent)
+- **Database**: [Supabase](https://supabase.com/) (PostgreSQL) - Persistent and production-ready
 - **PDF Generation**: [ReportLab](https://www.reportlab.com/)
 - **Data Manipulation**: Pandas
 - **Styling**: Custom CSS for premium aesthetics
+
+---
+
+## 🚀 The Upgrade: Why Supabase (PostgreSQL)?
+
+Previously, this project used **SQLite3**. While great for local development, it had significant limitations for a modern web application:
+
+1. **Persistence on Streamlit Cloud**: SQLite creates a local file. On hosting platforms like Streamlit Cloud, these files are **deleted** every time the app reboots or you push a code update. Supabase keeps your data safe and permanent.
+2. **Production-Ready Scaling**: PostgreSQL is a world-class database built to handle thousands of concurrent users and complex queries that SQLite struggles with.
+3. **Cloud Accessibility**: By using a hosted DB, your data is accessible from anywhere, allowing for multi-device synchronization and professional-grade security.
 
 ---
 
@@ -136,9 +146,9 @@ Salon-Management-System/
 
 This project is optimized for deployment on **Streamlit Cloud**:
 1. Connect your GitHub repository to Streamlit Cloud.
-2. Ensure `requirements.txt` is in the root directory.
-3. Set `app.py` as the main entry point.
-4. The SQLite database (`salon.db`) will be automatically initialized on first run.
+2. Go to **Settings > Secrets** in Streamlit Cloud.
+3. Add your Supabase credentials (`DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_PORT`).
+4. The system will automatically initialize the PostgreSQL tables on first run.
 
 ---
 
@@ -146,7 +156,7 @@ This project is optimized for deployment on **Streamlit Cloud**:
 
 - [ ] **SMS Integration**: Send appointment reminders via Twilio or similar APIs.
 - [ ] **Role-Based Access**: Multi-level access for Staff vs. Managers.
-- [ ] **Cloud Database**: Migration to PostgreSQL or MongoDB for larger scale.
+- [x] **Cloud Database**: Migration to PostgreSQL (Supabase) for persistence.
 - [ ] **Inventory Management**: Track salon products and low-stock alerts.
 
 ---

@@ -1,13 +1,9 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-from database import c, conn, PH
+from database import execute_query, fetch_all
 
-# ═══════════════════════════════════════════════
-# CUSTOMER MODULE
-# ═══════════════════════════════════════════════
 def customer_module():
-
     st.title("🧾 Customer Management System")
 
     if "subpage" not in st.session_state or st.session_state.subpage is None:
@@ -20,12 +16,10 @@ def customer_module():
     )
     st.session_state.subpage = action
 
-    # ═══════════════════ ADD ═══════════════════
+    # ================= ADD CUSTOMER =================
     if action == "Add":
-
         st.subheader("➕ Add New Customer")
-
-        name  = st.text_input("Customer Name")
+        name = st.text_input("Customer Name")
         phone = st.text_input("Phone Number")
         service = st.selectbox("Service", [
             "Haircut", "Makeup", "Facial", "Manicure", "Pedicure"
@@ -33,56 +27,40 @@ def customer_module():
 
         if st.button("Save Customer", use_container_width=True):
             if not name.strip() or not phone.strip():
-                st.error("Please fill all fields.")
+                st.error("Please fill all fields")
             else:
-                try:
-                    c.execute(
-                        f"INSERT INTO customers VALUES ({PH},{PH},{PH},{PH})",
-                        (name.strip(), phone.strip(), service, str(datetime.now().date()))
-                    )
-                    conn.commit()
+                success = execute_query(
+                    "INSERT INTO customers (cust_name, phone, service, visit_date) VALUES (%s, %s, %s, %s)",
+                    (name.strip(), phone.strip(), service, str(datetime.now().date()))
+                )
+                if success:
                     st.success(f"✅ Customer '{name}' added successfully!")
-                except Exception as e:
-                    conn.rollback()
-                    st.error(f"❌ Error saving customer: {e}")
 
-    # ═══════════════════ VIEW ══════════════════
+    # ================= VIEW CUSTOMERS =================
     elif action == "View":
-
         st.subheader("📋 All Customers")
-        try:
-            data = c.execute("SELECT * FROM customers").fetchall()
-            if data:
-                df = pd.DataFrame(data, columns=["Name", "Phone", "Service", "Date"])
-                st.dataframe(df, use_container_width=True)
-            else:
-                st.info("No customers found. Add customers first.")
-        except Exception as e:
-            st.error(f"❌ Error loading customers: {e}")
+        data = fetch_all("SELECT * FROM customers")
+        if data:
+            df = pd.DataFrame(data, columns=["Name", "Phone", "Service", "Date"])
+            st.dataframe(df, use_container_width=True)
+        else:
+            st.info("No customers found.")
 
-    # ═══════════════════ SEARCH ════════════════
+    # ================= SEARCH CUSTOMER =================
     elif action == "Search":
-
         st.subheader("🔍 Search Customer")
         phone = st.text_input("Enter Phone Number")
 
         if st.button("Search", use_container_width=True):
-            try:
-                result = c.execute(
-                    f"SELECT * FROM customers WHERE phone={PH}",
-                    (phone.strip(),)
-                ).fetchall()
-                if result:
-                    df = pd.DataFrame(result, columns=["Name", "Phone", "Service", "Date"])
-                    st.dataframe(df, use_container_width=True)
-                else:
-                    st.warning("No customer found with that phone number.")
-            except Exception as e:
-                st.error(f"❌ Search error: {e}")
+            result = fetch_all("SELECT * FROM customers WHERE phone=%s", (phone.strip(),))
+            if result:
+                df = pd.DataFrame(result, columns=["Name", "Phone", "Service", "Date"])
+                st.dataframe(df, use_container_width=True)
+            else:
+                st.warning("No customer found with that phone number.")
 
-    # ═══════════════════ DELETE ════════════════
+    # ================= DELETE CUSTOMER =================
     elif action == "Delete":
-
         st.subheader("🗑️ Delete Customer")
         phone = st.text_input("Enter Phone Number to Delete")
 
@@ -90,16 +68,6 @@ def customer_module():
             if not phone.strip():
                 st.error("Please enter a phone number.")
             else:
-                try:
-                    c.execute(
-                        f"DELETE FROM customers WHERE phone={PH}",
-                        (phone.strip(),)
-                    )
-                    conn.commit()
-                    if c.rowcount == 0:
-                        st.warning("No customer found with that phone number.")
-                    else:
-                        st.warning("🗑️ Customer deleted successfully.")
-                except Exception as e:
-                    conn.rollback()
-                    st.error(f"❌ Delete error: {e}")
+                success = execute_query("DELETE FROM customers WHERE phone=%s", (phone.strip(),))
+                if success:
+                    st.warning("🗑️ Customer deleted successfully.")

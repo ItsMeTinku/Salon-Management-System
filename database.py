@@ -1,114 +1,129 @@
 # database.py
-import os
-import sqlite3
+import psycopg2
+from psycopg2 import extras
+import streamlit as st
 
 # ─────────────────────────────────────────────────────────────────
-# Auto-detect which database backend to use.
-#
-#   Priority:
-#     1. DATABASE_URL in Streamlit secrets  →  PostgreSQL (hosted, persistent)
-#     2. DATABASE_URL environment variable  →  PostgreSQL (self-hosted)
-#     3. Nothing set                        →  SQLite (local dev only)
+# CENTRALIZED DATABASE CONNECTION
 # ─────────────────────────────────────────────────────────────────
 
-_db_url = None
-
-try:
-    import streamlit as st
-    _db_url = st.secrets.get("DATABASE_URL", None)
-except Exception:
-    pass
-
-if not _db_url:
-    _db_url = os.environ.get("DATABASE_URL", None)
-
-# ─────────────────────────────────────────────────────────────────
-# PostgreSQL Mode  (Supabase / Aiven / Neon / any hosted Postgres)
-# ─────────────────────────────────────────────────────────────────
-if _db_url:
-    import psycopg2
-    import streamlit as st
-
-    USE_POSTGRES = True
-    PH = "%s"          # psycopg2 placeholder
-
-    @st.cache_resource
-    def _init_pg_conn(url: str):
-        """Cached PostgreSQL connection — reused across Streamlit reruns."""
-        return psycopg2.connect(url, sslmode="require")
-
-    conn = _init_pg_conn(_db_url)
+def get_connection():
+    """Establish and return a connection to the Supabase PostgreSQL database."""
+    try:
+        conn = psycopg2.connect(
+            host=st.secrets["DB_HOST"],
+            database=st.secrets["DB_NAME"],
+            user=st.secrets["DB_USER"],
+            password=st.secrets["DB_PASSWORD"],
+            port=st.secrets["DB_PORT"]
+        )
+        return conn
+    except Exception as e:
+        st.error(f"Failed to connect to the database: {e}")
+        return None
 
 # ─────────────────────────────────────────────────────────────────
-# SQLite Mode  (local development — no setup needed)
+# HELPER FUNCTIONS FOR CLEANER CODE
 # ─────────────────────────────────────────────────────────────────
-else:
-    USE_POSTGRES = False
-    PH = "?"           # sqlite3 placeholder
 
-    if os.path.isdir("/tmp") and os.access("/tmp", os.W_OK):
-        _db_path = "/tmp/salon.db"
-    else:
-        _db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "salon.db")
+def execute_query(query, params=None):
+    """Execute a query (INSERT, UPDATE, DELETE) and commit changes."""
+    conn = get_connection()
+    if not conn:
+        return False
+    try:
+        with conn.cursor() as cur:
+            cur.execute(query, params)
+            conn.commit()
+            return True
+    except Exception as e:
+        st.error(f"Database Error: {e}")
+        conn.rollback()
+        return False
+    finally:
+        conn.close()
 
-    conn = sqlite3.connect(_db_path, check_same_thread=False)
+def fetch_all(query, params=None):
+    """Fetch all rows for a given query."""
+    conn = get_connection()
+    if not conn:
+        return []
+    try:
+        with conn.cursor() as cur:
+            cur.execute(query, params)
+            return cur.fetchall()
+    except Exception as e:
+        st.error(f"Database Fetch Error: {e}")
+        return []
+    finally:
+        conn.close()
 
-# Shared cursor
-c = conn.cursor()
+def fetch_one(query, params=None):
+    """Fetch a single row for a given query."""
+    conn = get_connection()
+    if not conn:
+        return None
+    try:
+        with conn.cursor() as cur:
+            cur.execute(query, params)
+            return cur.fetchone()
+    except Exception as e:
+        st.error(f"Database Fetch Error: {e}")
+        return None
+    finally:
+        conn.close()
 
 # ─────────────────────────────────────────────────────────────────
-# Table Creation  (syntax works for both PostgreSQL and SQLite)
+# TABLE INITIALIZATION (PostgreSQL Syntax)
 # ─────────────────────────────────────────────────────────────────
+
 def create_tables():
+    """Ensure all required tables exist in PostgreSQL."""
+    queries = [
+        """CREATE TABLE IF NOT EXISTS admin (
+            username TEXT PRIMARY KEY,
+            password TEXT
+        )""",
+        """CREATE TABLE IF NOT EXISTS employees (
+            id TEXT PRIMARY KEY,
+            name TEXT,
+            profession TEXT,
+            salary TEXT
+        )""",
+        """CREATE TABLE IF NOT EXISTS attendance (
+            emp_id TEXT,
+            emp_name TEXT,
+            status TEXT,
+            date TEXT
+        )""",
+        """CREATE TABLE IF NOT EXISTS customers (
+            cust_name TEXT,
+            phone TEXT,
+            service TEXT,
+            visit_date TEXT
+        )""",
+        """CREATE TABLE IF NOT EXISTS appointments (
+            cust_name TEXT,
+            service TEXT,
+            emp_id TEXT,
+            date TEXT,
+            status TEXT
+        )""",
+        """CREATE TABLE IF NOT EXISTS billing (
+            cust_name TEXT,
+            service TEXT,
+            amount TEXT,
+            date TEXT
+        )"""
+    ]
+    for q in queries:
+        execute_query(q)
 
-    c.execute("""CREATE TABLE IF NOT EXISTS admin (
-        username TEXT,
-        password TEXT
-    )""")
-
-    c.execute("""CREATE TABLE IF NOT EXISTS employees (
-        id TEXT PRIMARY KEY,
-        name TEXT,
-        profession TEXT,
-        salary TEXT
-    )""")
-
-    c.execute("""CREATE TABLE IF NOT EXISTS attendance (
-        emp_id TEXT,
-        emp_name TEXT,
-        status TEXT,
-        date TEXT
-    )""")
-
-    c.execute("""CREATE TABLE IF NOT EXISTS customers (
-        cust_name TEXT,
-        phone TEXT,
-        service TEXT,
-        visit_date TEXT
-    )""")
-
-    c.execute("""CREATE TABLE IF NOT EXISTS appointments (
-        cust_name TEXT,
-        service TEXT,
-        emp_id TEXT,
-        date TEXT,
-        status TEXT
-    )""")
-
-    c.execute("""CREATE TABLE IF NOT EXISTS billing (
-        cust_name TEXT,
-        service TEXT,
-        amount TEXT,
-        date TEXT
-    )""")
-
-    conn.commit()
-
-# ─────────────────────────────────────────────────────────────────
-# Default Admin Seed
-# ─────────────────────────────────────────────────────────────────
 def insert_admin():
-    admin = c.execute("SELECT * FROM admin").fetchall()
-    if not admin:
-        c.execute(f"INSERT INTO admin VALUES ({PH}, {PH})", ("admin", "admin123"))
-        conn.commit()
+    """Seed the default admin user."""
+    exists = fetch_one("SELECT * FROM admin WHERE username = %s", ("admin",))
+    if not exists:
+        execute_query(
+            "INSERT INTO admin (username, password) VALUES (%s, %s)",
+            ("admin", "admin123")
+        )
