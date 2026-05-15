@@ -1,5 +1,19 @@
 import streamlit as st
-from database import create_tables, insert_admin, fetch_all, fetch_one
+import pandas as pd
+
+# Must be the first Streamlit command
+st.set_page_config(
+    page_title="Salon ERP Dashboard",
+    page_icon="💇",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# Apply CSS from style.py
+from style import load_css
+load_css()
+
+from database import supabase_select
 from auth import init_session, login_page, logout
 
 # Standard modules
@@ -10,21 +24,10 @@ from attendance import attendance_module
 from billing import billing_module
 from search import global_search
 
-# ================= PAGE CONFIG =================
-st.set_page_config(
-    page_title="Salon ERP Dashboard",
-    page_icon="💇",
-    layout="wide"
-)
-
 # ================= INIT =================
-@st.cache_resource
-def startup_checks():
-    """Run table creation only once on startup."""
-    create_tables()
-    insert_admin()
+# Removed raw database table creation checks (startup_checks). 
+# Supabase tables should be created via SQL Editor using supabase_setup.sql.
 
-startup_checks()
 init_session()
 
 # ================= LOGIN GUARD =================
@@ -43,76 +46,123 @@ if "subpage" not in st.session_state:
 def navigate(page, subpage=None):
     st.session_state.page = page
     st.session_state.subpage = subpage
-    # Use st.rerun sparingly to avoid flickers
     st.rerun()
 
 # ================= SIDEBAR =================
 with st.sidebar:
-    st.title("💇 Salon ERP System")
-    st.write(f"Logged as: **{st.session_state.get('role', 'Staff')}**")
+    st.markdown("<h2 style='text-align: center; color: white;'>💇 Salon ERP</h2>", unsafe_allow_html=True)
+    st.markdown("---")
     
-    menu = st.radio(
-        "Navigation",
-        ["Dashboard", "Employees", "Customers", "Appointments", "Attendance", "Billing", "Search", "Logout"],
-        index=["Dashboard", "Employees", "Customers", "Appointments", "Attendance", "Billing", "Search", "Logout"].index(st.session_state.page),
-        key="main_nav"
-    )
+    # Display user info nicely
+    role_color = "#22c55e" if st.session_state.get('role') == 'Admin' else "#3b82f6"
+    username = st.session_state.get('username', 'User')
+    st.markdown(f"""
+    <div style="background-color: #1e293b; padding: 10px; border-radius: 8px; margin-bottom: 20px;">
+        <span style="color: #94a3b8; font-size: 12px;">Logged in as:</span><br/>
+        <strong style="color: white; font-size: 16px;">{username}</strong> 
+        <span style="color: {role_color}; font-size: 12px; font-weight: bold; background: #0f172a; padding: 2px 6px; border-radius: 4px;">{st.session_state.get('role', 'Staff')}</span>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Custom stylized navigation
+    nav_options = {
+        "Dashboard": "📊 Dashboard",
+        "Appointments": "📅 Appointments",
+        "Customers": "🧾 Customers",
+        "Billing": "💰 Billing",
+        "Employees": "👩‍💼 Employees",
+        "Attendance": "📌 Attendance",
+        "Search": "🔍 Search"
+    }
+    
+    for page_key, label in nav_options.items():
+        # Highlight active page
+        btn_type = "primary" if st.session_state.page == page_key else "secondary"
+        if st.button(label, use_container_width=True, type=btn_type):
+            navigate(page_key)
+            
+    st.markdown("---")
+    if st.button("🚪 Logout", use_container_width=True):
+        logout()
 
-    if menu != st.session_state.page:
-        st.session_state.page = menu
-        st.rerun()
-
-# ================= LOGOUT =================
-if st.session_state.page == "Logout":
-    logout()
-
-# ================= DASHBOARD (CACHED) =================
+# ================= DASHBOARD =================
 def dashboard():
-    st.title("📊 Salon ERP Dashboard")
+    st.markdown("<h1 style='color: #0f172a;'>📊 Business Dashboard</h1>", unsafe_allow_html=True)
+    st.markdown("Overview of salon performance and metrics.")
 
-    # Fetch data using cached helpers
+    # Fetch data using Supabase helper functions
     try:
-        emp_count = len(fetch_all("SELECT id FROM employees"))
-        cust_count = len(fetch_all("SELECT phone FROM customers"))
-        app_count = len(fetch_all("SELECT date FROM appointments"))
+        employees = supabase_select("employees")
+        emp_count = len(employees) if employees else 0
         
-        rev_row = fetch_one("SELECT SUM(CAST(amount AS INTEGER)) FROM billing")
-        revenue = rev_row[0] if rev_row and rev_row[0] else 0
+        customers = supabase_select("customers")
+        cust_count = len(customers) if customers else 0
+        
+        appointments = supabase_select("appointments")
+        app_count = len(appointments) if appointments else 0
+        
+        billing = supabase_select("billing")
+        
+        # Calculate revenue from billing data
+        revenue = 0
+        chart_data = []
+        if billing:
+            df = pd.DataFrame(billing)
+            if "amount" in df.columns:
+                revenue = pd.to_numeric(df["amount"], errors='coerce').sum()
+            
+            # Group by service for chart
+            if "service" in df.columns:
+                chart_df = df.groupby("service").size().reset_index(name="count")
+                chart_data = chart_df.set_index("service")["count"].to_dict()
 
         # ---------- KPI CARDS ----------
         col1, col2, col3, col4 = st.columns(4)
 
         with col1:
-            st.metric("👩‍💼 Employees", emp_count)
-            if st.button("Manage Staff", key="btn_emp"): navigate("Employees", "View")
-
+            st.metric("👩‍💼 Total Staff", emp_count)
         with col2:
-            st.metric("🧾 Customers", cust_count)
-            if st.button("Manage CRM", key="btn_cust"): navigate("Customers", "View")
-
+            st.metric("🧾 Customers CRM", cust_count)
         with col3:
-            st.metric("📅 Appointments", app_count)
-            if st.button("View Schedule", key="btn_app"): navigate("Appointments", "View")
-
+            st.metric("📅 Total Appointments", app_count)
         with col4:
-            st.metric("💰 Total Revenue", f"₹{revenue}")
-            if st.button("Billing History", key="btn_bill"): navigate("Billing", "View")
+            st.metric("💰 Total Revenue", f"₹{revenue:,.2f}")
 
         st.markdown("---")
 
-        # ---------- ANALYTICS (OPTIMIZED) ----------
-        st.subheader("📈 Business Analytics")
-
-        chart_data = fetch_all("""
-            SELECT service, COUNT(*) 
-            FROM billing 
-            GROUP BY service
-        """)
-
-        if chart_data:
-            st.bar_chart({k: v for k, v in chart_data})
-        else:
-            st.info("No billing data yet")
+        # ---------- ANALYTICS (MODERN) ----------
+        col_chart, col_recent = st.columns([2, 1])
+        
+        with col_chart:
+            st.markdown("### 📈 Revenue by Service")
+            with st.container(border=True):
+                if chart_data:
+                    st.bar_chart(chart_data, height=350)
+                else:
+                    st.info("No billing data available yet to display charts.")
+                    
+        with col_recent:
+            st.markdown("### 🔔 Today's Appointments")
+            with st.container(border=True):
+                if appointments:
+                    app_df = pd.DataFrame(appointments)
+                    if "date" in app_df.columns:
+                        today_str = pd.Timestamp.today().strftime('%Y-%m-%d')
+                        today_apps = app_df[app_df["date"] == today_str]
+                        
+                        if not today_apps.empty:
+                            for _, row in today_apps.iterrows():
+                                status_color = "green" if row.get('status') == 'Completed' else "orange"
+                                st.markdown(f"""
+                                <div style="padding: 10px; border-left: 4px solid {status_color}; background: #f8fafc; margin-bottom: 8px; border-radius: 4px;">
+                                    <strong>{row.get('cust_name', 'Unknown')}</strong> - {row.get('service', '')}<br/>
+                                    <span style="font-size: 12px; color: {status_color};">{row.get('status', '')}</span>
+                                </div>
+                                """, unsafe_allow_html=True)
+                        else:
+                            st.write("No appointments scheduled for today.")
+                else:
+                    st.write("No appointments found.")
 
     except Exception as e:
         st.error(f"Error loading dashboard: {e}")

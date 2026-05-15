@@ -1,43 +1,64 @@
 import streamlit as st
 import pandas as pd
-from database import fetch_all
+from database import supabase_select
 
 def global_search():
-    st.title("🔍 Unified Search")
-    query = st.text_input("Search ID, Name, Phone, or Service...", key="global_search_input")
+    st.markdown("<h1 style='color: #0f172a;'>🔍 Global Search</h1>", unsafe_allow_html=True)
+    st.markdown("Search across all modules: Employees, Customers, Appointments, and Billing.")
 
-    if query.strip():
-        like_query = f"%{query.strip()}%"
-        
-        try:
-            # Employees
-            emp = fetch_all("SELECT * FROM employees WHERE name LIKE %s OR id LIKE %s", (like_query, like_query))
-            if emp:
-                st.subheader("👩‍💼 Employees")
-                st.dataframe(pd.DataFrame(emp, columns=["ID", "Name", "Profession", "Salary"]), use_container_width=True)
+    with st.container(border=True):
+        query = st.text_input("Enter search term (Name, Phone, ID, Service...)", key="global_search_input")
 
-            # Customers
-            cust = fetch_all("SELECT * FROM customers WHERE cust_name LIKE %s OR phone LIKE %s", (like_query, like_query))
-            if cust:
-                st.subheader("🧾 Customers")
-                st.dataframe(pd.DataFrame(cust, columns=["Name", "Phone", "Service", "Date"]), use_container_width=True)
+        if query.strip():
+            st.markdown("---")
+            search_term = query.strip()
+            found_any = False
+            
+            try:
+                # 1. Search Employees (name, id, profession)
+                emp_filter = f"name.ilike.%{search_term}%,id.ilike.%{search_term}%,profession.ilike.%{search_term}%"
+                emp = supabase_select("employees", or_filter=emp_filter)
+                if emp:
+                    found_any = True
+                    st.markdown("### 👩‍💼 Employees")
+                    df = pd.DataFrame(emp)
+                    cols = [c for c in ["id", "name", "profession", "salary"] if c in df.columns]
+                    st.dataframe(df[cols], use_container_width=True, hide_index=True)
 
-            # Appointments
-            app = fetch_all("SELECT * FROM appointments WHERE cust_name LIKE %s OR emp_id LIKE %s", (like_query, like_query))
-            if app:
-                st.subheader("📅 Appointments")
-                st.dataframe(pd.DataFrame(app, columns=["Customer", "Service", "Employee ID", "Date", "Status"]), use_container_width=True)
+                # 2. Search Customers (cust_name, phone, service)
+                cust_filter = f"cust_name.ilike.%{search_term}%,phone.ilike.%{search_term}%,service.ilike.%{search_term}%"
+                cust = supabase_select("customers", or_filter=cust_filter)
+                if cust:
+                    found_any = True
+                    st.markdown("### 🧾 Customers")
+                    df = pd.DataFrame(cust)
+                    cols = [c for c in ["cust_name", "phone", "service", "visit_date"] if c in df.columns]
+                    st.dataframe(df[cols], use_container_width=True, hide_index=True)
 
-            # Billing
-            bill = fetch_all("SELECT * FROM billing WHERE cust_name LIKE %s OR service LIKE %s", (like_query, like_query))
-            if bill:
-                st.subheader("💰 Billing")
-                st.dataframe(pd.DataFrame(bill, columns=["Customer", "Service", "Amount", "Date"]), use_container_width=True)
+                # 3. Search Appointments (cust_name, emp_id, service, status)
+                app_filter = f"cust_name.ilike.%{search_term}%,emp_id.ilike.%{search_term}%,service.ilike.%{search_term}%,status.ilike.%{search_term}%"
+                app = supabase_select("appointments", or_filter=app_filter)
+                if app:
+                    found_any = True
+                    st.markdown("### 📅 Appointments")
+                    df = pd.DataFrame(app)
+                    cols = [c for c in ["date", "cust_name", "service", "emp_id", "status"] if c in df.columns]
+                    st.dataframe(df[cols], use_container_width=True, hide_index=True)
 
-            if not any([emp, cust, app, bill]):
-                st.warning("No matches found.")
+                # 4. Search Billing (cust_name, service)
+                bill_filter = f"cust_name.ilike.%{search_term}%,service.ilike.%{search_term}%"
+                bill = supabase_select("billing", or_filter=bill_filter)
+                if bill:
+                    found_any = True
+                    st.markdown("### 💰 Billing")
+                    df = pd.DataFrame(bill)
+                    cols = [c for c in ["date", "cust_name", "service", "amount"] if c in df.columns]
+                    st.dataframe(df[cols], use_container_width=True, hide_index=True)
 
-        except Exception as e:
-            st.error(f"Search error: {e}")
-    else:
-        st.info("Type above to start searching across the entire system.")
+                if not found_any:
+                    st.warning(f"No matches found for '{search_term}' anywhere in the system.")
+
+            except Exception as e:
+                st.error(f"Search error: {e}")
+        else:
+            st.info("Start typing above to search the database.")
