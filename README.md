@@ -8,89 +8,134 @@
 [![Supabase](https://img.shields.io/badge/backend-Supabase-3ECF8E.svg)](https://supabase.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A modern **Salon Management ERP System** built with **Python**, **Streamlit**, and **Supabase PostgreSQL**.  
-This project evolved from a basic CRUD application into a cloud-based management system featuring secure database architecture, UUID-based workflows, advanced validation, PDF billing, attendance tracking, and appointment management.
+A modern **Salon Management ERP System** built with **Python**, **Streamlit**, and **Supabase PostgreSQL**.
+
+This project evolved from a basic CRUD application into a cloud-based salon ERP platform featuring:
+
+- Secure backend architecture
+- UUID-based appointment workflows
+- Row Level Security (RLS)
+- Advanced validation systems
+- PDF invoice generation
+- Attendance & employee management
+- Modernized professional UI/UX
+- Real-time cloud persistence
 
 ---
 
 # 🚀 Live Demo
 
-### 🌐 Try the Application
+### 🌐 Application Link
 👉 https://salon-management-system-fnmykcwms3nt2mwga9lvbk.streamlit.app/
 
 ### 🔑 Demo Credentials
+
 | Role | Username | Password |
 |---|---|---|
 | Admin | `admin` | `admin123` |
 
 ---
 
-# 🌟 Key Features
+# 🌟 Key Features & UI Highlights
 
 ## 📊 Advanced Dashboard
-- Real-time salon analytics
-- Customer, employee, and appointment statistics
-- Revenue overview
-- Interactive service insights
-- Centralized management interface
+- Real-time analytics
+- Revenue insights
+- Appointment statistics
+- Service popularity tracking
+- Professional ERP-style interface
 
 ---
 
 ## 👩‍💼 Employee Management
-- Add, update, search, and delete employees
-- Manage staff roles and salaries
-- Employee attendance integration
-- Validation-based employee workflows
+- Add/update/delete employees
+- Salary management
+- Role tracking
+- Attendance integration
+- Validation-based workflows
 
 ---
 
 ## 👥 Customer Management
-- Maintain customer records
+- Cloud-based customer records
 - Fast customer lookup
 - Integrated appointment linking
-- Persistent cloud database storage
+- Persistent storage using PostgreSQL
 
 ---
 
 ## 📅 Appointment Management
-- Schedule customer appointments
-- Assign services and employees
-- Update appointment statuses
-- UUID-based appointment tracking
-- Improved reliability for update/delete operations
+- Schedule appointments
+- Assign employees/services
+- UUID-based appointment updates
+- Improved reliability and validation
 
 ---
 
-## 🧾 Smart Billing & Invoicing
-- Generate professional PDF invoices
-- Download billing reports
-- Dynamic service pricing
+## 🧾 Smart Billing System
+- PDF invoice generation
+- Downloadable billing reports
 - Persistent billing history
+- Improved billing workflows
 
 ---
 
 ## 🕒 Attendance Tracking
 - Daily attendance management
 - Present/Absent/Half-day tracking
-- Employee existence validation
-- Improved data consistency
+- Employee validation system
+- Improved workflow consistency
 
 ---
 
-## 🔍 Global Search System
-- Unified search across modules
-- Faster data access
-- Simplified navigation workflow
+## 🔍 Global Search
+- Unified search system
+- Cross-module record searching
+- Faster navigation experience
 
 ---
 
-# 🚀 Evolution of the Project (V1 → V2 → V3)
+# 🚀 Project Evolution (V1 → V2 → V3)
 
-| Version | Architecture | Database | Key Features | Limitations |
-|---|---|---|---|---|
-| **V1** | Basic CRUD Application | SQLite3 | Employee records, customer management, simple billing | Local-only storage |
-| **V2** | Advanced Management System | SQLite3 | Dashboard analytics, PDF invoices, attendance tracking | Data reset issues on cloud deployment |
-| **V3 (Current)** | Cloud ERP Architecture | Supabase PostgreSQL | RLS security, UUID workflows, cloud persistence, advanced validation | UI modernization in progress |
+| Version | Architecture | Database | Highlights |
+|---|---|---|---|
+| **V1** | Basic CRUD Application | SQLite3 | Core management features |
+| **V2** | Advanced Management System | SQLite3 | Analytics, PDF billing, attendance |
+| **V3** | Cloud ERP Architecture | Supabase PostgreSQL | RLS security, UUID workflows, cloud persistence, professional UI |
+
+---
+
+# 🎨 UI Evolution (Old vs New)
+
+## 🔐 Login Interface Upgrade
+
+| Previous UI | V3 Redesigned UI |
+| :---: | :---: |
+| ![Old Login](screenshots/login.png) | ![New Login](screenshots/loginnew.png) |
+
+---
+
+## 📊 Dashboard Upgrade
+
+| Previous Dashboard | V3 Dashboard |
+| :---: | :---: |
+| ![Old Dashboard](screenshots/dashboard.png) | ![New Dashboard](screenshots/dashboardnew.png) |
+
+---
+
+## 👩‍💼 Employee Management Upgrade
+
+| Previous Employee UI | V3 Employee UI |
+| :---: | :---: |
+| ![Old Employee UI](screenshots/Employee%20Management.png) | ![New Employee UI](screenshots/Employee%20Managementnew.png) |
+
+---
+
+## 📅 Appointment Module Upgrade
+
+| Previous Appointment UI | V3 Appointment UI |
+| :---: | :---: |
+| ![Old Appointment UI](screenshots/Appointments.png) | ![New Appointment UI](screenshots/Appointmentsnew.png) |
 
 ---
 
@@ -100,7 +145,7 @@ This project evolved from a basic CRUD application into a cloud-based management
 - Replaced SQLite with Supabase PostgreSQL
 - Added persistent cloud-based storage
 - Eliminated data loss after redeployment
-- Improved scalability and production readiness
+- Improved scalability and reliability
 
 ---
 
@@ -118,71 +163,71 @@ This project evolved from a basic CRUD application into a cloud-based management
 
 ---
 
-## 🧠 Advanced Validation System
+## 🧠 Advanced Validation & Error Handling
 - Added employee existence validation
-- Prevented invalid attendance insertion
-- Improved error handling and workflow stability
+- Prevented invalid attendance insertions
+- Improved workflow reliability
 
 ---
 
 ## 📄 Improved PDF Billing Workflow
-- Refactored invoice generation logic
 - Fixed Streamlit form/download conflicts
-- Improved PDF download reliability
+- Refactored invoice download flow
+- Improved billing stability
 
 ---
 
 ## ⚡ Live Database Synchronization
 - Added live appointment fetching
-- Reduced stale cached data issues
-- Improved consistency between frontend and database state
+- Reduced stale cached data
+- Improved frontend/database consistency
 
 ---
 
 # 🛠️ Technical Challenges Solved
 
-## 🔐 Supabase Authorization Issues
+## 🔐 Supabase Authorization Debugging
 - Fixed `42501` RLS permission errors
-- Configured policies for multiple tables
-- Solved authentication-related query failures
+- Implemented multi-table policies
+- Solved authentication query failures
 
 ---
 
 ## 🧩 Database Schema Migration
-- Added UUID columns to legacy tables
-- Migrated old appointment records safely
-- Improved relational consistency
+- Added UUID columns to appointment records
+- Migrated existing records safely
+- Improved database consistency
 
 ---
 
 ## 🔄 Stateful Update Workflows
-- Rebuilt update logic using UUID targeting
-- Removed unreliable customer-name-based updates
+- Rebuilt appointment update logic using UUID targeting
+- Removed unreliable customer-name matching
 
 ---
 
 ## 🧾 Streamlit Form Constraints
-- Solved `st.download_button()` form limitations
-- Implemented `session_state` persistence
+- Solved `st.download_button()` limitations inside forms
+- Implemented `session_state` persistence workflow
 
 ---
 
-## ✅ Validation & Error Handling
+## ✅ Validation Architecture
 - Prevented false success messages
 - Added early validation checks
 - Improved backend workflow safety
 
 ---
 
-# 📸 Screenshots
+# 📸 Current V3 Screenshots
 
-| Login Interface | Main Dashboard |
+| Login Interface | Dashboard |
 | :---: | :---: |
-| ![Login Screen](screenshots/login.png) | ![Dashboard](screenshots/dashboard.png) |
+| ![Login](screenshots/loginnew.png) | ![Dashboard](screenshots/dashboardnew.png) |
 
-| Employee Management | Appointment Scheduler |
+| Employee Management | Appointments |
 | :---: | :---: |
-| ![Employee Management](screenshots/Employee%20Management.png) | ![Appointments](screenshots/Appointments.png) |
+| ![Employees](screenshots/Employee%20Managementnew.png) | ![Appointments](screenshots/Appointmentsnew.png) |
 
 ---
 
@@ -202,6 +247,7 @@ This project evolved from a basic CRUD application into a cloud-based management
 # 🧱 Database Architecture
 
 ## Current Tables
+
 ```text
 admin
 appointments
@@ -211,7 +257,7 @@ customers
 employees
 ```
 
-## Architecture Improvements
+## Core Improvements
 - PostgreSQL cloud persistence
 - UUID-enabled workflows
 - Row Level Security (RLS)
@@ -224,31 +270,25 @@ employees
 
 ```text
 Salon-Management-System/
-├── app.py              # Main entry point & routing
-├── database.py         # Database connection & helpers
-├── auth.py             # Authentication logic
-├── employee.py         # Employee management module
-├── customer.py         # Customer management module
-├── appointment.py      # Appointment scheduling system
-├── attendance.py       # Attendance tracker
-├── billing.py          # Billing & invoice logic
-├── invoice.py          # PDF invoice engine
-├── search.py           # Global search system
-├── style.py            # Custom UI styling
-├── requirements.txt    # Dependencies
-└── banner.png          # README assets
+├── app.py
+├── database.py
+├── auth.py
+├── employee.py
+├── customer.py
+├── appointment.py
+├── attendance.py
+├── billing.py
+├── invoice.py
+├── search.py
+├── style.py
+├── requirements.txt
+├── screenshots/
+└── banner.png
 ```
 
 ---
 
 # ⚙️ Installation & Setup
-
-## Prerequisites
-- Python 3.9+
-- Git
-- Supabase Account
-
----
 
 ## 1️⃣ Clone Repository
 
@@ -267,7 +307,7 @@ python -m venv venv
 venv\Scripts\activate
 ```
 
-### Linux / macOS
+### Linux/macOS
 ```bash
 python3 -m venv venv
 source venv/bin/activate
@@ -316,24 +356,17 @@ streamlit run app.py
 4. Schedule appointments
 5. Mark attendance
 6. Generate invoices
-7. Track salon operations through dashboard analytics
+7. Monitor salon analytics
 
 ---
 
 # 🌐 Deployment
 
-Optimized for deployment on:
-
+Optimized for:
 - Streamlit Cloud
 - Render
 - Railway
-- VPS environments
-
-## Deployment Steps
-1. Push repository to GitHub
-2. Connect repo to Streamlit Cloud
-3. Add Supabase secrets
-4. Deploy application
+- VPS hosting
 
 ---
 
@@ -342,7 +375,7 @@ Optimized for deployment on:
 This project evolved from:
 
 ```text
-Basic CRUD Desktop-Style Application
+Basic CRUD Desktop Application
 ```
 
 into:
@@ -353,27 +386,25 @@ Cloud-Based Salon ERP System with Secure Backend Architecture
 
 The V3 upgrade focused heavily on:
 - backend engineering
-- database authorization
+- cloud database integration
 - schema design
-- debugging production-style workflows
+- debugging workflows
 - validation systems
+- UI modernization
 - scalable architecture
-
-rather than only adding frontend features.
 
 ---
 
 # 🔮 Future Improvements (V4 Roadmap)
 
-- [ ] Modern dashboard redesign
 - [ ] Role-based authentication
-- [ ] Advanced analytics & charts
 - [ ] Inventory management
 - [ ] SMS/WhatsApp reminders
 - [ ] Payroll management
-- [ ] API abstraction layer
-- [ ] Activity logging system
+- [ ] Advanced analytics & charts
 - [ ] Mobile responsive redesign
+- [ ] Activity logging system
+- [ ] API abstraction layer
 
 ---
 
@@ -381,15 +412,14 @@ rather than only adding frontend features.
 
 Contributions are welcome.
 
-## Steps
-1. Fork the repository
+1. Fork repository
 2. Create feature branch
 3. Commit changes
 4. Push branch
 5. Open Pull Request
 
----
 
+---
 
 # 👨‍💻 Developer
 
@@ -400,4 +430,4 @@ GitHub: https://github.com/ItsMeTinku
 
 # ❤️ Final Note
 
-This project represents the evolution from a beginner CRUD application into a structured cloud-based management system focused on real-world backend workflows, validation systems, and production-style debugging experience.
+This project represents the transition from a beginner CRUD application into a structured cloud-based ERP management system focused on real-world backend workflows, secure database architecture, validation systems, and professional UI/UX design.
