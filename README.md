@@ -371,7 +371,6 @@ rather than only adding frontend features.
 - [ ] Inventory management
 - [ ] SMS/WhatsApp reminders
 - [ ] Payroll management
-- [ ] Dark mode UI
 - [ ] API abstraction layer
 - [ ] Activity logging system
 - [ ] Mobile responsive redesign
@@ -391,11 +390,6 @@ Contributions are welcome.
 
 ---
 
-# 📄 License
-
-Distributed under the MIT License.
-
----
 
 # 👨‍💻 Developer
 
