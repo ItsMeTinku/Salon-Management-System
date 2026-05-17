@@ -38,10 +38,13 @@ VALID_PAGES = [
 ]
 
 # ─── Cookie Manager ──────────────────────────────────────────────
-def _get_cookie_manager() -> stx.CookieManager:
-    """Return CookieManager instance."""
-    return stx.CookieManager(key="salon_erp_cookie_mgr_v4")
-
+def _get_cookie_manager():
+    """Create CookieManager once per session."""
+    if "cookie_manager" not in st.session_state:
+        st.session_state.cookie_manager = stx.CookieManager(
+            key="salon_erp_cookie_mgr_v4"
+        )
+    return st.session_state.cookie_manager
 
 # ─── Token Utilities ─────────────────────────────────────────────
 
