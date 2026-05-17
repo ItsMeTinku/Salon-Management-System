@@ -38,13 +38,9 @@ VALID_PAGES = [
 ]
 
 # ─── Cookie Manager ──────────────────────────────────────────────
+@st.cache_resource
 def _get_cookie_manager():
-    """Create CookieManager once per session."""
-    if "cookie_manager" not in st.session_state:
-        st.session_state.cookie_manager = stx.CookieManager(
-            key="salon_erp_cookie_mgr_v4"
-        )
-    return st.session_state.cookie_manager
+    return stx.CookieManager()
 
 # ─── Token Utilities ─────────────────────────────────────────────
 
@@ -103,19 +99,9 @@ def _verify_token(token: str) -> dict | None:
 
 def init_session() -> None:
     """
-    Called once at the very top of app.py.
-
-    Priority order for session state:
-      1. Already logged in this run (st.session_state) → skip all checks.
-      2. Valid cookie found → restore session silently.
-      3. No valid cookie → show login page (handled by caller).
-
-    Page restoration:
-      st.query_params["page"] is preserved across browser refreshes
-      because it lives in the URL. We read it here and sync it to
-      st.session_state.page after auth is confirmed.
+    Initialize persistent session and restore login from cookies.
     """
-    # Set defaults once
+
     defaults = {
         "logged_in": False,
         "role": None,
@@ -123,32 +109,41 @@ def init_session() -> None:
         "page": "Dashboard",
         "subpage": None,
         "_cookie_checked": False,
+        "_auth_initialized": False,
     }
+
     for k, v in defaults.items():
         if k not in st.session_state:
             st.session_state[k] = v
 
-    # Already authenticated in this browser session — nothing to do
-    if st.session_state.logged_in and st.session_state._cookie_checked:
+    # Avoid re-running auth restore repeatedly
+    if st.session_state._auth_initialized:
         _sync_page_from_url()
         return
 
-    # ── Attempt cookie-based restoration ────────────────────────
     cookie_manager = _get_cookie_manager()
-    token = cookie_manager.get(COOKIE_NAME)
-    st.session_state._cookie_checked = True
+
+    # Get all cookies first
+    cookies = cookie_manager.get_all()
+
+    # Cookies may not be ready on first render
+    if cookies is None:
+        st.stop()
+
+    token = cookies.get(COOKIE_NAME)
 
     if token:
         user_data = _verify_token(str(token))
+
         if user_data:
             st.session_state.logged_in = True
             st.session_state.username = user_data["username"]
             st.session_state.role = user_data["role"]
-            _sync_page_from_url()
-            return
 
-    # Cookie absent or invalid — session stays logged_out
-    st.session_state.logged_in = False
+    st.session_state._cookie_checked = True
+    st.session_state._auth_initialized = True
+
+    _sync_page_from_url()
 
 
 def _sync_page_from_url() -> None:
@@ -215,6 +210,8 @@ def login_page() -> None:
                         expires = datetime.now() + timedelta(days=SESSION_DURATION_DAYS)
                         cookie_manager = _get_cookie_manager()
                         cookie_manager.set(COOKIE_NAME, token, expires_at=expires)
+                        time.sleep(1)
+                        st.rerun()
 
                         # ── Update URL ────────────────────────────────
                         st.query_params["page"] = "Dashboard"
