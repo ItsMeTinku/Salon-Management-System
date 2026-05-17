@@ -241,12 +241,21 @@ def load_css() -> None:
     .stInfo    { background:#eff6ff !important; color:#1e40af !important; border:1px solid #bfdbfe !important; border-radius:8px !important; }
 
     /* ══════════════════════════════════════════
+       PERMANENT SIDEBAR (Hide Toggle Buttons)
+    ══════════════════════════════════════════ */
+    [data-testid="collapsedControl"],
+    [data-testid="stSidebarCollapsedControl"],
+    [data-testid="stSidebarCollapseButton"],
+    section[data-testid="stSidebar"] button[kind="header"] {
+        display: none !important;
+    }
+
+    /* ══════════════════════════════════════════
        HIDE STREAMLIT CHROME
     ══════════════════════════════════════════ */
     #MainMenu { visibility: hidden; }
-    footer     { visibility: hidden; }
-    header     { background: transparent !important; }
-    header [data-testid="stToolbar"] { visibility: hidden !important; }
+    footer { visibility: hidden; }
+    header { visibility: hidden !important; }
 
     /* ══════════════════════════════════════════
        MOBILE BOTTOM NAV  (hidden on desktop)
