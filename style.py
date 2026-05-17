@@ -116,53 +116,7 @@ def load_css() -> None:
         margin: 10px 0 !important;
     }
 
-    /* ── Sidebar collapse arrow ── */
-    /* ══════════════════════════════════════════
-       SIDEBAR COLLAPSE / EXPAND BUTTON
-    ══════════════════════════════════════════ */
-    [data-testid="collapsedControl"],
-    [data-testid="stSidebarCollapsedControl"],
-    [data-testid="stSidebarCollapseButton"] {
-        background-color: var(--primary)   !important;
-        border-radius:    0 10px 10px 0    !important;
-        min-height:       56px             !important;
-        width:            24px             !important;
-        display:          flex             !important;
-        align-items:      center           !important;
-        justify-content:  center           !important;
-        box-shadow:       3px 0 10px rgba(79,70,229,0.5) !important;
-        border:           none             !important;
-        position:         fixed            !important;
-        top:              50%              !important;
-        transform:        translateY(-50%) !important;
-        z-index:          9998             !important;
-        cursor:           pointer          !important;
-        transition:       width 0.15s ease, background 0.15s ease !important;
-    }
-    [data-testid="collapsedControl"]:hover,
-    [data-testid="stSidebarCollapsedControl"]:hover,
-    [data-testid="stSidebarCollapseButton"]:hover {
-        background-color: var(--primary-dark) !important;
-        width:            30px                !important;
-    }
-    [data-testid="collapsedControl"] svg,
-    [data-testid="stSidebarCollapsedControl"] svg,
-    [data-testid="stSidebarCollapseButton"] svg {
-        fill:   black !important;
-        color:  black !important;
-        width:  14px  !important;
-        height: 14px  !important;
-    }
-    [data-testid="collapsedControl"] button,
-    [data-testid="collapsedControl"] span,
-    [data-testid="stSidebarCollapsedControl"] button,
-    [data-testid="stSidebarCollapsedControl"] span,
-    [data-testid="stSidebarCollapseButton"] button,
-    [data-testid="stSidebarCollapseButton"] span {
-        background: transparent !important;
-        border:     none        !important;
-        color:      black       !important;
-    }
+    /* Sidebar toggle is now handled by Streamlit natively */
 
     /* ══════════════════════════════════════════
        KPI METRIC CARDS  — matches screenshot
