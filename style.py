@@ -124,7 +124,9 @@ def load_css() -> None:
        The button sits at the left edge of the screen
        so the user can always click to reopen sidebar.
     ══════════════════════════════════════════ */
-    [data-testid="collapsedControl"] {
+    [data-testid="collapsedControl"],
+    [data-testid="stSidebarCollapsedControl"],
+    [data-testid="stSidebarCollapseButton"] {
         visibility:       visible          !important;
         background-color: var(--primary)   !important;
         border-radius:    0 10px 10px 0    !important;
@@ -142,18 +144,26 @@ def load_css() -> None:
         cursor:           pointer          !important;
         transition:       width 0.15s ease, background 0.15s ease !important;
     }
-    [data-testid="collapsedControl"]:hover {
+    [data-testid="collapsedControl"]:hover,
+    [data-testid="stSidebarCollapsedControl"]:hover,
+    [data-testid="stSidebarCollapseButton"]:hover {
         background-color: var(--primary-dark) !important;
         width:            30px                !important;
     }
-    [data-testid="collapsedControl"] svg {
+    [data-testid="collapsedControl"] svg,
+    [data-testid="stSidebarCollapsedControl"] svg,
+    [data-testid="stSidebarCollapseButton"] svg {
         fill:   black !important;
         color:  black !important;
         width:  14px  !important;
         height: 14px  !important;
     }
     [data-testid="collapsedControl"] button,
-    [data-testid="collapsedControl"] span {
+    [data-testid="collapsedControl"] span,
+    [data-testid="stSidebarCollapsedControl"] button,
+    [data-testid="stSidebarCollapsedControl"] span,
+    [data-testid="stSidebarCollapseButton"] button,
+    [data-testid="stSidebarCollapseButton"] span {
         background: transparent !important;
         border:     none        !important;
         color:      black       !important;
