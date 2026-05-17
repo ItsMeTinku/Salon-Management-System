@@ -37,10 +37,9 @@ VALID_PAGES = [
     "Billing", "Employees", "Attendance", "Search"
 ]
 
-# ─── Cookie Manager (singleton via cache_resource) ───────────────
-@st.cache_resource
+# ─── Cookie Manager ──────────────────────────────────────────────
 def _get_cookie_manager() -> stx.CookieManager:
-    """Return the single CookieManager instance for the app lifetime."""
+    """Return CookieManager instance."""
     return stx.CookieManager(key="salon_erp_cookie_mgr_v4")
 
 
