@@ -125,6 +125,7 @@ def load_css() -> None:
        so the user can always click to reopen sidebar.
     ══════════════════════════════════════════ */
     [data-testid="collapsedControl"] {
+        visibility:       visible          !important;
         background-color: var(--primary)   !important;
         border-radius:    0 10px 10px 0    !important;
         min-height:       56px             !important;
