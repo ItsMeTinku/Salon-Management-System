@@ -147,8 +147,8 @@ def load_css() -> None:
         width:            30px                !important;
     }
     [data-testid="collapsedControl"] svg {
-        fill:   white !important;
-        color:  white !important;
+        fill:   black !important;
+        color:  black !important;
         width:  14px  !important;
         height: 14px  !important;
     }
@@ -156,7 +156,7 @@ def load_css() -> None:
     [data-testid="collapsedControl"] span {
         background: transparent !important;
         border:     none        !important;
-        color:      white       !important;
+        color:      black       !important;
     }
 
     /* ══════════════════════════════════════════
