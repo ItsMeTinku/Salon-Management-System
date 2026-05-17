@@ -89,40 +89,88 @@ def load_css() -> None:
     }
 
     /* ════════════════════════════════════════════════════════════
-       SIDEBAR — DESKTOP
+       SIDEBAR — DESKTOP & MOBILE
+       Forces sidebar to always be visible and correctly styled.
+       Fixes: sidebar buttons invisible, sidebar collapsed on mobile.
     ════════════════════════════════════════════════════════════ */
-    section[data-testid="stSidebar"] {
+
+    /* Sidebar background */
+    section[data-testid="stSidebar"],
+    section[data-testid="stSidebar"] > div,
+    section[data-testid="stSidebar"] > div:first-child {
         background-color: var(--sidebar-bg) !important;
-        border-right: 1px solid #1e293b;
+        border-right: 1px solid #1e293b !important;
     }
+
+    /* Force sidebar to stay open on all screen sizes */
+    section[data-testid="stSidebar"] {
+        min-width: 240px !important;
+        width: 260px !important;
+    }
+
+    /* All text inside sidebar */
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] span,
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] .stMarkdown,
     section[data-testid="stSidebar"] .stMarkdown p {
         color: #e2e8f0 !important;
     }
-    /* Nav buttons */
-    section[data-testid="stSidebar"] button {
+
+    /* ── Nav buttons: base ── */
+    section[data-testid="stSidebar"] .stButton > button {
+        width: 100% !important;
         border-radius: var(--radius-md) !important;
-        transition: all var(--transition);
-        margin-bottom: 4px;
-        min-height: 44px;
+        transition: all var(--transition) !important;
+        margin-bottom: 4px !important;
+        min-height: 44px !important;
+        text-align: left !important;
         justify-content: flex-start !important;
         padding-left: 1rem !important;
-        font-size: 0.95rem !important;
-    }
-    section[data-testid="stSidebar"] button[kind="primary"] {
-        background-color: var(--primary) !important;
+        font-size: 0.92rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.01em !important;
         border: none !important;
-        color: white !important;
-        box-shadow: 0 4px 8px rgba(79,70,229,0.35) !important;
+        display: flex !important;
+        align-items: center !important;
     }
-    section[data-testid="stSidebar"] button[kind="secondary"] {
-        background-color: transparent !important;
-        border: 1px solid transparent !important;
+
+    /* ── Active page (primary) ── */
+    section[data-testid="stSidebar"] .stButton > button[kind="primary"],
+    section[data-testid="stSidebar"] .stButton > button[data-testid="baseButton-primary"] {
+        background-color: var(--primary) !important;
+        color: white !important;
+        box-shadow: 0 4px 10px rgba(79,70,229,0.4) !important;
+    }
+
+    /* ── Inactive pages (secondary) ── */
+    section[data-testid="stSidebar"] .stButton > button[kind="secondary"],
+    section[data-testid="stSidebar"] .stButton > button[data-testid="baseButton-secondary"] {
+        background-color: rgba(255,255,255,0.05) !important;
         color: #cbd5e1 !important;
+        border: 1px solid rgba(255,255,255,0.06) !important;
     }
-    section[data-testid="stSidebar"] button[kind="secondary"]:hover {
-        background-color: rgba(255,255,255,0.08) !important;
+
+    section[data-testid="stSidebar"] .stButton > button[kind="secondary"]:hover,
+    section[data-testid="stSidebar"] .stButton > button[data-testid="baseButton-secondary"]:hover {
+        background-color: rgba(255,255,255,0.12) !important;
         color: white !important;
-        border-color: rgba(255,255,255,0.12) !important;
+        border-color: rgba(255,255,255,0.15) !important;
+    }
+
+    /* ── Sidebar divider ── */
+    section[data-testid="stSidebar"] hr {
+        border-color: #1e293b !important;
+        margin: 12px 0 !important;
+    }
+
+    /* ── Sidebar collapse button — make it visible on dark bg ── */
+    button[data-testid="collapsedControl"],
+    button[kind="header"] {
+        background-color: var(--primary) !important;
+        color: white !important;
+        border-radius: 0 8px 8px 0 !important;
+        border: none !important;
     }
 
     /* ════════════════════════════════════════════════════════════
