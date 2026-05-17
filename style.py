@@ -241,13 +241,15 @@ def load_css() -> None:
     .stInfo    { background:#eff6ff !important; color:#1e40af !important; border:1px solid #bfdbfe !important; border-radius:8px !important; }
 
     /* ══════════════════════════════════════════
-       PERMANENT SIDEBAR (Hide Toggle Buttons)
+       SIDEBAR TOGGLE BUTTONS
+       Making sure the expand arrow is visible!
     ══════════════════════════════════════════ */
     [data-testid="collapsedControl"],
     [data-testid="stSidebarCollapsedControl"],
     [data-testid="stSidebarCollapseButton"],
     section[data-testid="stSidebar"] button[kind="header"] {
-        display: none !important;
+        display: inline-flex !important;
+        visibility: visible !important;
     }
 
     /* ══════════════════════════════════════════
@@ -255,7 +257,9 @@ def load_css() -> None:
     ══════════════════════════════════════════ */
     #MainMenu { visibility: hidden; }
     footer { visibility: hidden; }
-    header { visibility: hidden !important; }
+    /* We CANNOT hide the header, because the sidebar arrow lives inside it! */
+    header { background: transparent !important; }
+    header [data-testid="stToolbar"] { visibility: hidden !important; }
 
     /* ══════════════════════════════════════════
        MOBILE BOTTOM NAV  (hidden on desktop)
