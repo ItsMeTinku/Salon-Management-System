@@ -98,69 +98,73 @@ def navigate(page: str, subpage: str | None = None) -> None:
 # SIDEBAR (desktop primary nav + mobile secondary)
 # ══════════════════════════════════════════════════════════════════
 with st.sidebar:
-    # Branding
+    # ── Branding — matches screenshot header ──────────────────
     st.markdown("""
-    <div style="text-align:center; padding: 0.5rem 0 1rem;">
-        <div style="font-size: 2.5rem;">💇</div>
-        <h2 style="color:white; margin:0; font-size:1.3rem; letter-spacing:-0.02em;">
-            Salon ERP
-        </h2>
-        <p style="color:#475569; font-size:0.7rem; margin-top:2px;">
-            Management System
-        </p>
+    <div style="text-align:center; padding:0.75rem 0 1.25rem;">
+        <div style="font-size:2.2rem; line-height:1;">💇</div>
+        <p style="
+            color:white; font-size:1.25rem; font-weight:700;
+            margin:6px 0 0; letter-spacing:-0.02em;
+        ">Salon ERP</p>
     </div>
     """, unsafe_allow_html=True)
 
-    # User info badge
-    role_color = "#22c55e" if st.session_state.get("role") == "Admin" else "#3b82f6"
-    uname = st.session_state.get("username", "User")
-    urole = st.session_state.get("role", "Staff")
+    # ── User info badge — matches screenshot exactly ──────────
+    uname      = st.session_state.get("username", "User")
+    urole      = st.session_state.get("role", "Staff")
+    role_color = "#22c55e" if urole == "Admin" else "#3b82f6"
     st.markdown(f"""
     <div style="
-        background:#1e293b; padding:10px 14px; border-radius:10px;
-        margin-bottom:16px; border:1px solid #334155;
+        background:#1e293b; padding:10px 14px;
+        border-radius:10px; margin-bottom:14px;
+        border:1px solid #334155;
     ">
-        <span style="color:#94a3b8; font-size:11px;">Logged in as</span><br/>
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px;">
+        <span style="color:#64748b; font-size:11px; font-weight:500;">
+            Logged in as:
+        </span><br/>
+        <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
             <strong style="color:white; font-size:15px;">{uname}</strong>
             <span style="
                 color:{role_color}; font-size:11px; font-weight:700;
-                background:#0f172a; padding:2px 8px; border-radius:999px;
-                border:1px solid {role_color}33;
+                background:#0f172a; padding:2px 8px;
+                border-radius:999px; border:1px solid {role_color}44;
             ">{urole}</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-    # Navigation items
+    # ── Navigation — same labels as screenshot ────────────────
     nav_items = [
-        ("Dashboard",    "📊  Dashboard"),
-        ("Appointments", "📅  Appointments"),
-        ("Customers",    "🧾  Customers"),
-        ("Billing",      "💰  Billing"),
-        ("Employees",    "👩‍💼  Employees"),
-        ("Attendance",   "📌  Attendance"),
-        ("Search",       "🔍  Search"),
+        ("Dashboard",    "📊 Dashboard"),
+        ("Appointments", "📅 Appointments"),
+        ("Customers",    "🧾 Customers"),
+        ("Billing",      "💰 Billing"),
+        ("Employees",    "👩‍💼 Employees"),
+        ("Attendance",   "📌 Attendance"),
+        ("Search",       "🔍 Search"),
     ]
 
-    current_page = st.session_state.page
     for page_key, label in nav_items:
-        btn_type = "primary" if current_page == page_key else "secondary"
-        if st.button(label, use_container_width=True,
-                     type=btn_type, key=f"nav_{page_key}"):
+        is_active = st.session_state.page == page_key
+        if st.button(
+            label,
+            use_container_width=True,
+            type="primary" if is_active else "secondary",
+            key=f"nav_{page_key}",
+        ):
             navigate(page_key)
 
-    st.markdown("<hr style='border-color:#1e293b; margin:12px 0;'>",
-                unsafe_allow_html=True)
-
-    # Session info
+    st.markdown(
+        "<hr style='border-color:#1e293b; margin:14px 0 10px;'>",
+        unsafe_allow_html=True,
+    )
     st.markdown("""
-    <div style="color:#475569; font-size:11px; text-align:center; margin-bottom:8px;">
+    <p style="color:#475569; font-size:11px; text-align:center; margin:0 0 8px;">
         🔒 Session valid for 7 days
-    </div>
+    </p>
     """, unsafe_allow_html=True)
 
-    if st.button("🚪  Logout", use_container_width=True, key="sidebar_logout"):
+    if st.button("🚪 Logout", use_container_width=True, key="sidebar_logout"):
         logout()
 
 # ══════════════════════════════════════════════════════════════════
