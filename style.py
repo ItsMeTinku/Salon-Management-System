@@ -241,15 +241,13 @@ def load_css() -> None:
     .stInfo    { background:#eff6ff !important; color:#1e40af !important; border:1px solid #bfdbfe !important; border-radius:8px !important; }
 
     /* ══════════════════════════════════════════
-       SIDEBAR TOGGLE BUTTONS
-       Making sure the expand arrow is visible!
+       PERMANENT SIDEBAR (Hide Toggle Buttons)
     ══════════════════════════════════════════ */
     [data-testid="collapsedControl"],
     [data-testid="stSidebarCollapsedControl"],
     [data-testid="stSidebarCollapseButton"],
-    section[data-testid="stSidebar"] button[kind="header"] {
-        display: inline-flex !important;
-        visibility: visible !important;
+    section[data-testid="stSidebar"] button {
+        display: none !important;
     }
 
     /* ══════════════════════════════════════════
