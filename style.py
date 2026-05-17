@@ -246,7 +246,7 @@ def load_css() -> None:
     [data-testid="collapsedControl"],
     [data-testid="stSidebarCollapsedControl"],
     [data-testid="stSidebarCollapseButton"],
-    section[data-testid="stSidebar"] button {
+    section[data-testid="stSidebar"] button[kind="header"] {
         display: none !important;
     }
 
