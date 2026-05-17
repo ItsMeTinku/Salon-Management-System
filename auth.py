@@ -39,9 +39,9 @@ VALID_PAGES = [
 
 # ─── Cookie Manager ──────────────────────────────────────────────
 @st.cache_resource
-def _get_cookie_manager():
-    return stx.CookieManager()
-
+def _get_cookie_manager() -> stx.CookieManager:
+    """Return the single CookieManager instance for the app lifetime."""
+    return stx.CookieManager(key="salon_erp_cookie_mgr_v4")
 # ─── Token Utilities ─────────────────────────────────────────────
 
 def _get_secret() -> str:
