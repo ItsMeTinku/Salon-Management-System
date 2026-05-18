@@ -6,24 +6,125 @@
 
 ---
 
+## 🚀 Live Demo
+**Link:** [https://salon-management-system.streamlit.app/](https://salon-management-system.streamlit.app/)  
+**Username:** `admin`  
+**Password:** `admin123`  
+
+---
+
+## 🖼️ UI Gallery (Before & After)
+
+### Login Page
+| Old UI (V3) | New UI (V4) |
+|-------------|-------------|
+| ![Old Login](screenshots/login.png) | ![New Login](screenshots/loginnew.png) |
+
+### Dashboard
+| Old UI (V3) | New UI (V4) |
+|-------------|-------------|
+| ![Old Dashboard](screenshots/dashboard.png) | ![New Dashboard](screenshots/dashboardnew.png) |
+
+### Appointments
+| Old UI (V3) | New UI (V4) |
+|-------------|-------------|
+| ![Old Appointments](screenshots/Appointments.png) | ![New Appointments](screenshots/Appointmentsnew.png) |
+
+### Employee Management
+| Old UI (V3) | New UI (V4) |
+|-------------|-------------|
+| ![Old Employees](screenshots/Employee%20Management.png) | ![New Employees](screenshots/Employee%20Managementnew.png) |
+
+---
+
 ## 📋 Table of Contents
 
-1. [Quick Summary](#summary)
-2. [🐛 Bug Fix 1 — Logged Out on Every Refresh](#bug1)
-3. [🐛 Bug Fix 2 — Mobile Navigation Completely Broken](#bug2)
-4. [🐛 Bug Fix 3 — Sidebar Invisible / Not Showing](#bug3)
-5. [🐛 Bug Fix 4 — Page Resets to Dashboard on Refresh](#bug4)
-6. [🐛 Bug Fix 5 — Duplicate Customers Inserted Silently](#bug5)
-7. [✨ Improvement 1 — Login Page Redesigned](#imp1)
-8. [✨ Improvement 2 — Sidebar Gets a User Badge](#imp2)
-9. [✨ Improvement 3 — Dashboard Quick Action Buttons](#imp3)
-10. [✨ Improvement 4 — Tables Scroll on Mobile](#imp4)
-11. [✨ Improvement 5 — Animations & Hover Effects](#imp5)
-12. [✨ Improvement 6 — Touch-Friendly Buttons](#imp6)
-13. [📁 File-by-File Summary](#files)
-14. [⚙️ Setup & Installation](#setup)
-15. [🔒 Security Notes](#security)
-16. [📱 Mobile Tips](#mobile)
+1. [🏗️ System Architecture](#architecture)
+2. [Quick Summary](#summary)
+3. [🐛 Bug Fix 1 — Logged Out on Every Refresh](#bug1)
+4. [🐛 Bug Fix 2 — Mobile Navigation Completely Broken](#bug2)
+5. [🐛 Bug Fix 3 — Sidebar Invisible / Not Showing](#bug3)
+6. [🐛 Bug Fix 4 — Page Resets to Dashboard on Refresh](#bug4)
+7. [🐛 Bug Fix 5 — Duplicate Customers Inserted Silently](#bug5)
+8. [✨ Improvement 1 — Login Page Redesigned](#imp1)
+9. [✨ Improvement 2 — Sidebar Gets a User Badge](#imp2)
+10. [✨ Improvement 3 — Dashboard Quick Action Buttons](#imp3)
+11. [✨ Improvement 4 — Tables Scroll on Mobile](#imp4)
+12. [✨ Improvement 5 — Animations & Hover Effects](#imp5)
+13. [✨ Improvement 6 — Touch-Friendly Buttons](#imp6)
+14. [📁 File-by-File Summary](#files)
+15. [⚙️ Setup & Installation](#setup)
+16. [🔒 Security Notes](#security)
+17. [📱 Mobile Tips](#mobile)
+
+---
+
+<a name="architecture"></a>
+## 🏗️ System Architecture
+
+### Architecture Overview
+The application follows a modern 2-tier architecture, combining a Python-based Streamlit frontend with a scalable PostgreSQL backend hosted on Supabase.
+
+```mermaid
+graph TD
+    User([User Device]) -->|HTTPS / WSS| Streamlit[Streamlit App / Backend]
+    Streamlit -->|REST API| Supabase[(Supabase PostgreSQL)]
+    
+    subgraph Core Modules
+        Dashboard[📊 Dashboard]
+        Appointments[📅 Appointments]
+        Customers[🧾 Customers]
+        Billing[💰 Billing]
+        Employees[👩‍💼 Employees]
+        Attendance[📌 Attendance]
+    end
+    
+    Streamlit --- Dashboard
+    Streamlit --- Appointments
+    Streamlit --- Customers
+    Streamlit --- Billing
+    Streamlit --- Employees
+    Streamlit --- Attendance
+```
+
+### Authentication Flow (HMAC Cookie Session)
+To solve Streamlit's native session limitation, we built a secure token-based authentication flow that persists sessions across browser reloads.
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Streamlit as Streamlit App
+    participant Cookie as Browser Cookie
+    participant DB as Supabase DB
+    
+    User->>Streamlit: Enter Credentials
+    Streamlit->>DB: Verify user/password
+    DB-->>Streamlit: Return User Details
+    Streamlit->>Streamlit: Generate HMAC-SHA256 Token
+    Streamlit->>Cookie: Set 'salon_session' Cookie (7 days)
+    Streamlit->>User: Redirect to Dashboard
+    
+    Note over User,DB: On Page Refresh / Return Visit
+    User->>Streamlit: Opens App
+    Streamlit->>Cookie: Read 'salon_session' Cookie
+    Cookie-->>Streamlit: Return Token
+    Streamlit->>Streamlit: Verify HMAC Signature & Expiry
+    Streamlit->>User: Restore Session (No login required)
+```
+
+### Database Interaction
+All database interactions are routed through a centralized `database.py` module. This provides a clean interface for the application, abstracting away Supabase REST API calls. 
+- **Caching**: Heavy reads (like employee lists or service menus) are cached using `@st.cache_data` to reduce database load and improve response times.
+- **Write Operations**: Insert/Update actions automatically clear the relevant cache buffers using `clear_db_cache()` to ensure the UI instantly reflects new data.
+
+### Module Structure
+The system is heavily modularized for maintainability. Each business function lives in its own file and relies on shared utilities.
+
+- `app.py` — Core router, state manager, and UI shell (sidebar & mobile nav)
+- `auth.py` — Custom HMAC cookie generation and verification
+- `database.py` — Supabase connection and caching logic
+- `style.py` — UI framework, CSS overrides, mobile responsive breakpoints
+- **Business Modules:** `appointment.py`, `attendance.py`, `billing.py`, `customer.py`, `employee.py`
 
 ---
 
