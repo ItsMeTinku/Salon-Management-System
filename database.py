@@ -45,7 +45,7 @@ def get_supabase_client() -> Client:
         url = st.secrets["SUPABASE_URL"]
         # Prefer SERVICE_ROLE_KEY; fall back to SUPABASE_KEY so
         # existing deployments keep working while the user migrates.
-        key = st.secrets.get("SUPABASE_SERVICE_ROLE_KEY") or st.secrets["SUPABASE_KEY"]
+        key = st.secrets.get("SUPABASE_SERVICE_ROLE_KEY") or st.secrets["SUPABASE_SERVICE_ROLE_KEY"]
         return create_client(url, key)
     except KeyError as e:
         st.error(
