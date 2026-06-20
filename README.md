@@ -728,9 +728,7 @@ too small to tap accurately on a phone.
     }
 }
 ```
-
 ---
-
 <a name="files"></a>
 ## 📁 File-by-File Summary
 
@@ -839,7 +837,7 @@ too small to tap accurately on a phone.
 ---
 
 <a name="setup"></a>
-## ⚙️ Setup & Installation
+##  Setup & Installation
 
 ### Step 1 — Install dependencies
 ```bash
@@ -887,7 +885,7 @@ streamlit run app.py
 ---
 
 <a name="mobile"></a>
-## 📱 Mobile Tips
+##  Mobile Tips
 
 1. **Test at 375 px** — iPhone SE width, the smallest common screen
 2. **`font-size: 16px` on inputs** — smaller sizes trigger iOS Safari auto-zoom
