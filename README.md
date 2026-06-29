@@ -13,7 +13,7 @@
 
 ---
 
-## 🖼️ UI Gallery (Before & After)
+##  UI Gallery (Before & After)
 
 ### Login Page
 | Old UI (V3) | New UI (V4) |
