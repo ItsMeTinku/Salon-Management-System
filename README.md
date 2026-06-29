@@ -71,7 +71,7 @@ graph TD
     Streamlit -->|REST API| Supabase[(Supabase PostgreSQL)]
     
     subgraph Core Modules
-        Dashboard[📊 Dashboard]
+        Dashboard[ Dashboard]
         Appointments[📅 Appointments]
         Customers[🧾 Customers]
         Billing[💰 Billing]
