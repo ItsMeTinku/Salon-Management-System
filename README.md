@@ -60,7 +60,7 @@
 ---
 
 <a name="architecture"></a>
-## 🏗️ System Architecture
+##  System Architecture
 
 ### Architecture Overview
 The application follows a modern 2-tier architecture, combining a Python-based Streamlit frontend with a scalable PostgreSQL backend hosted on Supabase.
