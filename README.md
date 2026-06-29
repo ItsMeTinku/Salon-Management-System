@@ -37,7 +37,7 @@
 
 ---
 
-## 📋 Table of Contents
+##  Table of Contents
 
 1. [🏗️ System Architecture](#architecture)
 2. [Quick Summary](#summary)
