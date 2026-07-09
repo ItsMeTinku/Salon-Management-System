@@ -6,7 +6,8 @@
 
 ---
 
-##  Live Demo       ⚠️ Note currently this option is not working due to limitation of using free server
+##  Live Demo       
+## ⚠️ Note currently this option is not working due to limitation of using free server
 **Link:** [https://salon-management-system.streamlit.app/](https://salon-management-system.streamlit.app/)  
 **Username:** `admin`  
 **Password:** `admin123`  
