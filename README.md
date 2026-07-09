@@ -6,7 +6,7 @@
 
 ---
 
-## 🚀 Live Demo
+##  Live Demo
 **Link:** [https://salon-management-system.streamlit.app/](https://salon-management-system.streamlit.app/)  
 **Username:** `admin`  
 **Password:** `admin123`  
