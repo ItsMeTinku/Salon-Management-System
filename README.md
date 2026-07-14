@@ -272,7 +272,7 @@ with st.sidebar:
     if st.button("👩‍💼 Employees"):   navigate("Employees")
     if st.button("📌 Attendance"):   navigate("Attendance")
     if st.button("🔍 Search"):       navigate("Search")
-    # ❌ On mobile = sidebar collapsed = none of these visible
+    #  On mobile = sidebar collapsed = none of these visible
 ```
 
 ### V4 Code (Fixed)
