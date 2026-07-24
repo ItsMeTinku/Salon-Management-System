@@ -703,7 +703,7 @@ div[data-testid="metric-container"]:hover {
 ---
 
 <a name="imp6"></a>
-## ✨ Improvement 6 — Touch-Friendly Buttons
+##  Improvement 6 — Touch-Friendly Buttons
 
 ### Before (V3)
 No minimum height on buttons. On mobile they could be as small as 28 px —
