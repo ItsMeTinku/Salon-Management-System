@@ -901,5 +901,5 @@ streamlit run app.py
 
 <div align="center">
     
-### Thanks for reading 
+### Thanks for reading ❤️
 <div/>
