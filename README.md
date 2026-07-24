@@ -902,4 +902,5 @@ streamlit run app.py
 <div align="center">
     
 ### Thanks for reading ❤️
+build with python and ❤️
 
