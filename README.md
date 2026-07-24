@@ -898,3 +898,8 @@ streamlit run app.py
 8. **`-webkit-overflow-scrolling: touch`** — adds inertia/momentum scroll on iOS
 9. **Bottom padding ≥ 5rem on mobile** — content needs space above the bottom nav bar
 10. **`st.container(border=True)`** — groups content cleanly on all screen sizes
+
+<div align="center">
+    
+### Thanks for reading 
+<div/>
