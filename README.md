@@ -42,7 +42,7 @@
 
 1. [🏗️ System Architecture](#architecture)
 2. [Quick Summary](#summary)
-3. [🐛 Bug Fix 1 — Logged Out on Every Refresh](#bug1)
+3. [ Bug Fix 1 — Logged Out on Every Refresh](#bug1)
 4. [🐛 Bug Fix 2 — Mobile Navigation Completely Broken](#bug2)
 5. [🐛 Bug Fix 3 — Sidebar Invisible / Not Showing](#bug3)
 6. [🐛 Bug Fix 4 — Page Resets to Dashboard on Refresh](#bug4)
