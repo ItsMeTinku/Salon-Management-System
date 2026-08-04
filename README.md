@@ -871,7 +871,7 @@ streamlit run app.py
 ---
 
 <a name="security"></a>
-## 🔒 Security Notes
+##  Security Notes
 
 | Practice | Where | Why |
 |----------|-------|-----|
