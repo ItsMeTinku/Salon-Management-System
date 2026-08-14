@@ -1,4 +1,4 @@
-# 💇 Salon ERP — V3 → V4 Upgrade Notes
+#  Salon ERP — V3 → V4 Upgrade Notes
 
 > This document explains every bug that was found and fixed, every improvement
 > made, and shows the exact **before vs after** code so you can see precisely
@@ -73,7 +73,7 @@ graph TD
     
     subgraph Core Modules
         Dashboard[ Dashboard]
-        Appointments[📅 Appointments]
+        Appointments[ Appointments]
         Customers[🧾 Customers]
         Billing[💰 Billing]
         Employees[👩‍💼 Employees]
