@@ -77,7 +77,7 @@ graph TD
         Customers[ Customers]
         Billing[ Billing]
         Employees[ Employees]
-        Attendance[📌 Attendance]
+        Attendance[ Attendance]
     end
     
     Streamlit --- Dashboard
