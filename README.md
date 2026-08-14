@@ -74,7 +74,7 @@ graph TD
     subgraph Core Modules
         Dashboard[ Dashboard]
         Appointments[ Appointments]
-        Customers[🧾 Customers]
+        Customers[ Customers]
         Billing[💰 Billing]
         Employees[👩‍💼 Employees]
         Attendance[📌 Attendance]
