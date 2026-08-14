@@ -76,7 +76,7 @@ graph TD
         Appointments[ Appointments]
         Customers[ Customers]
         Billing[ Billing]
-        Employees[👩‍💼 Employees]
+        Employees[ Employees]
         Attendance[📌 Attendance]
     end
     
