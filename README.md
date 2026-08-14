@@ -75,7 +75,7 @@ graph TD
         Dashboard[ Dashboard]
         Appointments[ Appointments]
         Customers[ Customers]
-        Billing[💰 Billing]
+        Billing[ Billing]
         Employees[👩‍💼 Employees]
         Attendance[📌 Attendance]
     end
