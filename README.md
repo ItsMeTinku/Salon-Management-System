@@ -49,7 +49,7 @@
 7. [ Bug Fix 5 — Duplicate Customers Inserted Silently](#bug5)
 8. [ Improvement 1 — Login Page Redesigned](#imp1)
 9. [ Improvement 2 — Sidebar Gets a User Badge](#imp2)
-10. [✨ Improvement 3 — Dashboard Quick Action Buttons](#imp3)
+10. [ Improvement 3 — Dashboard Quick Action Buttons](#imp3)
 11. [✨ Improvement 4 — Tables Scroll on Mobile](#imp4)
 12. [✨ Improvement 5 — Animations & Hover Effects](#imp5)
 13. [✨ Improvement 6 — Touch-Friendly Buttons](#imp6)
