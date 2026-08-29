@@ -47,7 +47,7 @@
 5. [ Bug Fix 3 — Sidebar Invisible / Not Showing](#bug3)
 6. [ Bug Fix 4 — Page Resets to Dashboard on Refresh](#bug4)
 7. [ Bug Fix 5 — Duplicate Customers Inserted Silently](#bug5)
-8. [✨ Improvement 1 — Login Page Redesigned](#imp1)
+8. [ Improvement 1 — Login Page Redesigned](#imp1)
 9. [✨ Improvement 2 — Sidebar Gets a User Badge](#imp2)
 10. [✨ Improvement 3 — Dashboard Quick Action Buttons](#imp3)
 11. [✨ Improvement 4 — Tables Scroll on Mobile](#imp4)
